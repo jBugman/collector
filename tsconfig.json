@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "sourceMap": true,
+    "strict": true,
+    "baseUrl": "."
+  },
+  "exclude": [
+    "node_modules",
+    "output"
+  ]
+}
