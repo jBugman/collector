@@ -1,27 +1,18 @@
 module.exports = {
   extends: [
+    'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    'airbnb-typescript/base',
+    'standard'
   ],
   plugins: [
-    'import',
-    'react',
+    '@typescript-eslint',
+    'react'
   ],
-  settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': [
-        '.ts',
-        '.tsx',
-      ],
-    },
-    'import/resolver': {
-      typescript: {
-        alwaysTryTypes: true,
-      },
-    },
-  },
   rules: {
+    'semi': ['error', 'always'],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    // Fixes JSX with Solid
     'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
-  },
+    'react/jsx-uses-vars': 'error'
+  }
 };

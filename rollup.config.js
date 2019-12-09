@@ -15,29 +15,29 @@ export default {
   output: {
     dir: OUTPUT,
     format: 'iife',
-    sourcemap: true,
+    sourcemap: true
   },
 
   plugins: [
     resolve({
-      extensions: EXTENSIONS,
+      extensions: EXTENSIONS
     }),
     eslint({
-      throwOnError: true,
+      throwOnError: true
     }),
     babel({
-      extensions: EXTENSIONS,
+      extensions: EXTENSIONS
     }),
     env({
-      NODE_ENV: PRODUCTION ? 'production' : 'development',
+      NODE_ENV: PRODUCTION ? 'production' : 'development'
     }),
     html({
       template: 'src/index.html',
-      dest: OUTPUT,
+      dest: OUTPUT
     }),
     serve({
       contentBase: OUTPUT,
-      port: 3000,
-    }),
-  ],
+      port: 3000
+    })
+  ]
 };
