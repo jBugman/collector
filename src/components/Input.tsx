@@ -1,25 +1,15 @@
 import { createState, createEffect } from 'solid-js';
-import { css } from 'emotion';
-
-const textAreaStyles = css`
-  min-width: 300px;
-  min-height: 400px; 
-  background: #0c0b0b;
-  border-color: #141414;
-  padding: 6px;
-  color: inherit;
-  outline: none;
-  border: 1px solid #141414;
-`;
 
 interface Props {
   onTextChange?: (text: string) => void;
+  className?: string;
 }
 
-const Form = ({ onTextChange }: Props) => {
+const Input = ({ onTextChange, className }: Props) => {
   const [state, setState] = createState({ text: '' });
 
   const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
     if (!e.clipboardData) {
       return;
     }
@@ -33,7 +23,6 @@ const Form = ({ onTextChange }: Props) => {
   };
 
   createEffect(() => {
-    console.debug('text', state.text);
     if (typeof onTextChange === 'function') {
       onTextChange(state.text);
     }
@@ -41,7 +30,8 @@ const Form = ({ onTextChange }: Props) => {
 
   return (
     <textarea
-      className={textAreaStyles}
+      className={className}
+      placeholder="Paste stats here"
       value={state.text}
       onPaste={handlePaste}
       onInput={handleChange}
@@ -49,4 +39,4 @@ const Form = ({ onTextChange }: Props) => {
   );
 };
 
-export default Form;
+export default Input;
