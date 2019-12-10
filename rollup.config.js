@@ -22,9 +22,7 @@ export default {
     resolve({
       extensions: EXTENSIONS
     }),
-    eslint({
-      throwOnError: true
-    }),
+    eslint(),
     babel({
       extensions: EXTENSIONS
     }),
