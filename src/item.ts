@@ -7,7 +7,7 @@ enum SpecialType {
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
-enum ItemClass {
+export enum ItemClass {
   Weapon = 'Weapon',
   Armour = 'Armour',
   Jewelry = 'Jewelry',
@@ -16,7 +16,7 @@ enum ItemClass {
   Flask = 'Flask'
 }
 
-interface RawItem {
+export interface RawItem {
   rarity?: string; // TODO
   ilvl: number;
   name: string;
