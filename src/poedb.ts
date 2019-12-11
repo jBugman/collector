@@ -10,8 +10,16 @@ const getURL = (name: string): string => {
 
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)
-    .map((x, i, xs) => (i % 3 === 0) ? `${x.textContent}${xs[i + 1].textContent}` : null)
-    .filter(x => !!x) as string[];
+    .reduce((xs: Node[][], x: Node) => {
+      if (x.nodeName === 'BR') {
+        return [...xs, []];
+      } else {
+        const ys = xs.pop() || [];
+        return [...xs, [...ys, x]];
+      }
+    }, [])
+    .map((xs: Node[]) =>
+      xs.map((x: Node) => x.textContent).join(''));
 
 export const getUniqueInfo = async (name: string): Promise<PropRanges> => {
   const url = getURL(name);
