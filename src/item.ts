@@ -1,32 +1,6 @@
-enum SpecialType {
-  Corrupted = 'Corrupted',
-  Shaper = 'Shaper Item',
-  Elder = 'Elder Item',
-  Synthesized = 'Synthesised Item',
-}
+import { ItemClass, RawItem, SpecialType } from './types';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
-
-export enum ItemClass {
-  Weapon = 'Weapon',
-  Armour = 'Armour',
-  Jewelry = 'Jewelry',
-  Jewel = 'Jewel',
-  Map = 'Map',
-  Flask = 'Flask'
-}
-
-export interface RawItem {
-  rarity?: string; // TODO
-  ilvl: number;
-  name: string;
-  typeLine: string;
-  class: ItemClass;
-  specialType?: SpecialType;
-  implicitMods: string[];
-  explicitMods: string[];
-  craftedMods?: string[];
-}
 
 const SEPARATOR = '--------';
 const TYPE_JEWEL = 'Jewel';

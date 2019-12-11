@@ -1,10 +1,12 @@
-import { createState } from 'solid-js';
+import { createState, createEffect } from 'solid-js';
 import { css } from 'emotion';
 
 import Input from './Input';
 import Button from './Button';
-import { parseCopypasta, RawItem } from '../item';
-import { getUniqueInfo, PropRanges } from '../poedb';
+import { parseCopypasta } from '../item';
+import { getUniqueInfo } from '../poedb';
+import { PropRanges, RawItem } from '../types';
+import { savePropRanges, loadPropRanges } from '../db';
 
 const groupStyles = css`
   display: grid;
@@ -36,10 +38,21 @@ const ItemStats = () => {
     propRanges: null as PropRanges | null
   });
 
+  createEffect(() => {
+    if (state.stats && !state.propRanges) {
+      loadPropRanges(state.stats.name)
+        .then(propRanges => setState({ propRanges }));
+    }
+  });
+
   const handleLoad = () => {
     if (!state.stats) return;
-    getUniqueInfo(state.stats.name)
-      .then(propRanges => setState({ propRanges }));
+    const name = state.stats.name;
+    getUniqueInfo(name)
+      .then(propRanges => {
+        savePropRanges(name, propRanges);
+        setState({ propRanges });
+      });
   };
 
   return (

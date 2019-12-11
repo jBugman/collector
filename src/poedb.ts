@@ -1,4 +1,6 @@
 /* globals DOMParser, fetch */
+import { PropRanges } from './types';
+
 const proxy = 'https://cors-anywhere.herokuapp.com/'; // TODO: use own proxy
 
 const getURL = (name: string): string => {
@@ -10,11 +12,6 @@ const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)
     .map((x, i, xs) => (i % 3 === 0) ? `${x.textContent}${xs[i + 1].textContent}` : null)
     .filter(x => !!x) as string[];
-
-export interface PropRanges {
-  implicitMods?: string[];
-  explicitMods: string[];
-}
 
 export const getUniqueInfo = async (name: string): Promise<PropRanges> => {
   const url = getURL(name);
