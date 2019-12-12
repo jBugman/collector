@@ -9,4 +9,4 @@ const store = new Store(DB_NAME, TABLE_PROP_RANGES);
 
 export const savePropRanges = (name: string, data: PropRanges) => set(name, data, store);
 
-export const loadPropRanges = (name: string): Promise<PropRanges> => get(name, store);
+export const loadPropRanges = (name: string): Promise<PropRanges | undefined> => get(name, store);

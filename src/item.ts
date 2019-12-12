@@ -123,9 +123,51 @@ const intersect = <T>(a: Set<T>, b: Set<T>): Set<T> =>
 const diff = <T>(a: Set<T>, b: Set<T>): Set<T> =>
   new Set([...a].filter(x => !b.has(x)));
 
-export const compareStats = (mods: string[], ranges: string[]): string[] => {
+const valueRegex = /([+-]?[0-9.]+)/giu;
+const generalizeMod = (mod: string): Record<string, number> => {
+  let x = 0;
+  const key = mod.replace(valueRegex, m => {
+    x = parseFloat(m);
+    return 'X';
+  });
+  return { [key]: x };
+};
+
+const rangeRegex = new RegExp(`([+-]?\\(${valueRegex.source}[-–]${valueRegex.source}\\))`, 'giu');
+const generalizeModRange = (mod: string): Record<string, [number, number]> => {
+  let x = 0;
+  let y = 0;
+  const key = mod.replace(rangeRegex, (...args) => {
+    x = parseFloat(args[2]);
+    y = parseFloat(args[3]);
+    return 'X';
+  });
+  return { [key]: [x, y] };
+};
+
+const scale = (x: number, bottom: number, top: number): number =>
+  (x - bottom) / (top - bottom);
+
+export const compareStats = (mods: string[], ranges: string[]) => {
+  console.log('compare', mods, ranges);
   const modSet = new Set(mods);
   const rangeSet = new Set(ranges);
   const similar = intersect(modSet, rangeSet);
-  return [...diff(modSet, similar).values()];
+  const modValues = [...diff(modSet, similar).values()]
+    .map(generalizeMod)
+    .reduce((acc, x) => ({ ...acc, ...x }), {});
+  const rangeValues = [...diff(rangeSet, similar).values()]
+    .map(generalizeModRange)
+    .reduce((acc, x) => ({ ...acc, ...x }), {});
+  const combinedValues = Object.keys(modValues)
+    .reduce((acc, k) => ({
+      ...acc,
+      [k]: scale(modValues[k], ...rangeValues[k])
+    }), {});
+  const scores = Object.values(combinedValues) as number[];
+  const avg = scores.reduce((acc, x) => acc + x, 0) / scores.length;
+  return {
+    mods: combinedValues,
+    score: avg
+  };
 };
