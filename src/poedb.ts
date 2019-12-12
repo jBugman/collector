@@ -11,15 +11,18 @@ const getURL = (name: string): string => {
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)
     .reduce((xs: Node[][], x: Node) => {
+      // Start new line on a <br>
       if (x.nodeName === 'BR') {
         return [...xs, []];
-      } else
-      if (x.nodeName === 'SPAN' && (x as Element).className === 'item_description') {
-        return xs;
-      } else {
-        const ys = xs.pop() || [];
-        return [...xs, [...ys, x]];
       }
+      // Skip meta info
+      const className = x.nodeName === 'SPAN' && (x as Element).className;
+      if (className === 'item_description' || className === 'mod_grey') {
+        return xs;
+      }
+      // Append useful data
+      const ys = xs.pop() || [];
+      return [...xs, [...ys, x]];
     }, [])
     .filter(x => x.length > 0)
     .map((xs: Node[]) =>
