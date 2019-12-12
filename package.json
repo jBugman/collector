@@ -10,8 +10,8 @@
     "dev": "rollup -cw"
   },
   "dependencies": {
+    "@isomorphic-git/idb-keyval": "^3.3.1",
     "emotion": "^10.0.23",
-    "idb-keyval": "^3.2.0",
     "solid-js": "^0.14.9"
   },
   "devDependencies": {

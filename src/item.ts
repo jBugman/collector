@@ -33,7 +33,7 @@ export const parseCopypasta = (text: string): RawItem => {
       // Name
       item.rarity = trimPrefix(RARITY_PREFIX, header);
       item.name = lines[1];
-      item.typeLine = lines[2];
+      item.typeLine = lines[2] || '';
       const typeWords = item.typeLine.split(' ');
       if (typeWords.some(w => w === TYPE_JEWEL)) {
         item.class = ItemClass.Jewel;

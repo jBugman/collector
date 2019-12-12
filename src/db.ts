@@ -1,4 +1,4 @@
-import { Store, set, get } from 'idb-keyval';
+import { Store, set, get } from '@isomorphic-git/idb-keyval';
 
 import { PropRanges } from './types';
 
