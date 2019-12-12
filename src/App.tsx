@@ -1,4 +1,4 @@
-import { css, injectGlobal } from 'emotion';
+import { injectGlobal } from 'emotion';
 import ItemStats from './components/ItemStats';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -21,15 +21,8 @@ injectGlobal`
   }
 `;
 
-const style = css`
-  align-self: center;
-  justify-self: center;
-`;
-
 const App = () => (
-  <div className={style}>
-    <ItemStats/>
-  </div>
+  <ItemStats/>
 );
 
 export default App;

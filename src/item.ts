@@ -116,3 +116,16 @@ export const parseCopypasta = (text: string): RawItem => {
 
   return item;
 };
+
+const intersect = <T>(a: Set<T>, b: Set<T>): Set<T> =>
+  new Set([...a].filter(x => b.has(x)));
+
+const diff = <T>(a: Set<T>, b: Set<T>): Set<T> =>
+  new Set([...a].filter(x => !b.has(x)));
+
+export const compareStats = (mods: string[], ranges: string[]): string[] => {
+  const modSet = new Set(mods);
+  const rangeSet = new Set(ranges);
+  const similar = intersect(modSet, rangeSet);
+  return [...diff(modSet, similar).values()];
+};

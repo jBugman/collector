@@ -3,17 +3,20 @@ import { css } from 'emotion';
 
 import Input from './Input';
 import Button from './Button';
-import { parseCopypasta } from '../item';
+import { parseCopypasta, compareStats } from '../item';
 import { getUniqueInfo } from '../poedb';
 import { PropRanges, RawItem } from '../types';
 import { savePropRanges, loadPropRanges } from '../db';
 
 const groupStyles = css`
+  align-self: center;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 10px;
-  width: 700px;
+  min-width: 700px;
+  width: 100%;
   height: 475px;
+  padding: 0 40px;
 `;
 
 const statsStyles = css`
@@ -35,13 +38,17 @@ const rangesContainerStyled = css`
 interface State {
   stats: RawItem | null;
   propRanges: PropRanges | null;
+  comparison: string[] | null;
 }
 
+const initialState: State = {
+  stats: null,
+  propRanges: null,
+  comparison: null
+};
+
 const ItemStats = () => {
-  const [state, setState] = createState<State>({
-    stats: null,
-    propRanges: null
-  });
+  const [state, setState] = createState(initialState);
 
   createEffect(async () => {
     if (!state.stats) return;
@@ -49,10 +56,16 @@ const ItemStats = () => {
     setState({ propRanges });
   });
 
+  createEffect(() => {
+    if (!state.stats || !state.propRanges) return;
+    const comparison = compareStats(state.stats.explicitMods, state.propRanges.explicitMods);
+    setState({ comparison });
+  });
+
   const handlePaste = (text: string) => {
     if (!text) return;
     const stats = parseCopypasta(text);
-    setState({ stats, propRanges: null });
+    setState({ ...initialState, stats });
   };
 
   const handleLoad = () => {
@@ -76,6 +89,9 @@ const ItemStats = () => {
           {state.propRanges && JSON.stringify(state.propRanges, undefined, 2)}
         </div>
         <Button onClick={handleLoad} disabled={!state.stats}>Load from PoeDB</Button>
+      </div>
+      <div className={statsStyles}>
+        {state.comparison && JSON.stringify(state.comparison, undefined, 2)}
       </div>
     </div>
   );
