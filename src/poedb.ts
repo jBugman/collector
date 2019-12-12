@@ -13,11 +13,15 @@ const parseModBlock = (el: Element): string[] =>
     .reduce((xs: Node[][], x: Node) => {
       if (x.nodeName === 'BR') {
         return [...xs, []];
+      } else
+      if (x.nodeName === 'SPAN' && (x as Element).className === 'item_description') {
+        return xs;
       } else {
         const ys = xs.pop() || [];
         return [...xs, [...ys, x]];
       }
     }, [])
+    .filter(x => x.length > 0)
     .map((xs: Node[]) =>
       xs.map((x: Node) => x.textContent).join(''));
 
