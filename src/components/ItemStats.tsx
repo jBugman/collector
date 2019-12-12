@@ -32,18 +32,28 @@ const rangesContainerStyled = css`
   grid-template-rows: 1fr auto;
 `;
 
+interface State {
+  stats: RawItem | null;
+  propRanges: PropRanges | null;
+}
+
 const ItemStats = () => {
-  const [state, setState] = createState({
-    stats: null as RawItem | null,
-    propRanges: null as PropRanges | null
+  const [state, setState] = createState<State>({
+    stats: null,
+    propRanges: null
   });
 
-  createEffect(() => {
-    if (state.stats && !state.propRanges) {
-      loadPropRanges(state.stats.name)
-        .then(propRanges => setState({ propRanges }));
-    }
+  createEffect(async () => {
+    if (!state.stats) return;
+    const propRanges = await loadPropRanges(state.stats.name);
+    setState({ propRanges });
   });
+
+  const handlePaste = (text: string) => {
+    if (!text) return;
+    const stats = parseCopypasta(text);
+    setState({ stats, propRanges: null });
+  };
 
   const handleLoad = () => {
     if (!state.stats) return;
@@ -57,10 +67,7 @@ const ItemStats = () => {
 
   return (
     <div className={groupStyles}>
-      <Input
-        className={statsStyles}
-        onTextChange={text => text && setState({ stats: parseCopypasta(text) })}
-      />
+      <Input className={statsStyles} onTextChange={handlePaste} />
       <div className={statsStyles}>
         {state.stats && JSON.stringify(state.stats, undefined, 2)}
       </div>
