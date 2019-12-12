@@ -20,7 +20,7 @@ const ES_PREFIX = 'Energy Shield:';
 const trimPrefix = (p: string, s: string): string => s.substr(p.length).trimLeft();
 
 export const parseCopypasta = (text: string): RawItem => {
-  const blocks = text.replace('\r\n', '\n').split(SEPARATOR);
+  const blocks = text.replace('\r', '').split(SEPARATOR);
 
   const item = {} as RawItem;
 
