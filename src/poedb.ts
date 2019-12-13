@@ -33,7 +33,8 @@ export const getUniqueInfo = async (name: string): Promise<PropRanges> => {
   const data = await fetch(url, { mode: 'cors' });
   return data.text().then(body => {
     const doc = new DOMParser().parseFromString(body, 'text/html');
-    const modBlocks = [...doc.getElementsByClassName('itemboxstatsgroup text-mod')];
+    const itemBlocks = doc.getElementsByClassName('itembox-gem')[0];
+    const modBlocks = [...itemBlocks.getElementsByClassName('itemboxstatsgroup text-mod')];
     const ranges = modBlocks.length === 1 ? ({
       explicitMods: parseModBlock(modBlocks[0])
     }) : ({
