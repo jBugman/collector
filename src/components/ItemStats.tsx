@@ -1,4 +1,4 @@
-import { createState, createEffect } from 'solid-js';
+import { createState, createDependentEffect } from 'solid-js';
 import { css } from 'emotion';
 
 import Input from './Input';
@@ -35,10 +35,16 @@ const rangesContainerStyled = css`
   grid-template-rows: 1fr auto;
 `;
 
+const StatsWindow = (props: {stats: object | null}) => (
+  <div className={statsStyles}>
+    {props.stats && JSON.stringify(props.stats, undefined, 2)}
+  </div>
+);
+
 interface State {
   stats: RawItem | null;
   propRanges: PropRanges | null;
-  comparison: string[] | null;
+  comparison: ReturnType<typeof compareStats> | null;
 }
 
 const initialState: State = {
@@ -50,49 +56,41 @@ const initialState: State = {
 const ItemStats = () => {
   const [state, setState] = createState(initialState);
 
-  createEffect(async () => {
-    if (!state.stats) return;
-    const propRanges = await loadPropRanges(state.stats.name);
-    setState({ propRanges });
+  createDependentEffect(async () => {
+    if (state.stats) {
+      const propRanges = await loadPropRanges(state.stats.name) || null;
+      setState({ propRanges });
+    }
+    if (state.stats && state.propRanges) {
+      const comparison = compareStats(state.stats.explicitMods, state.propRanges.explicitMods);
+      setState({ comparison });
+    }
+  }, [() => state.stats, () => state.propRanges]);
+
+  const handlePaste = (text: string) => setState({
+    ...initialState,
+    stats: text ? parseCopypasta(text) : null,
+    comparison: null
   });
 
-  createEffect(() => {
-    if (!state.stats || !state.propRanges) return;
-    const comparison = compareStats(state.stats.explicitMods, state.propRanges.explicitMods);
-    setState({ comparison });
-  });
-
-  const handlePaste = (text: string) => {
-    if (!text) return;
-    const stats = parseCopypasta(text);
-    setState({ ...initialState, stats });
-  };
-
-  const handleLoad = () => {
-    if (!state.stats) return;
-    const name = state.stats.name;
-    getUniqueInfo(name)
-      .then(propRanges => {
-        savePropRanges(name, propRanges);
-        setState({ propRanges });
-      });
+  const onLoadClick = async () => {
+    if (state.stats) {
+      const name = state.stats.name;
+      const propRanges = await getUniqueInfo(name);
+      savePropRanges(name, propRanges);
+      setState({ propRanges });
+    }
   };
 
   return (
     <div className={groupStyles}>
       <Input className={statsStyles} onTextChange={handlePaste} />
-      <div className={statsStyles}>
-        {state.stats && JSON.stringify(state.stats, undefined, 2)}
-      </div>
+      <StatsWindow stats={state.stats}/>
       <div className={rangesContainerStyled}>
-        <div className={statsStyles}>
-          {state.propRanges && JSON.stringify(state.propRanges, undefined, 2)}
-        </div>
-        <Button onClick={handleLoad} disabled={!state.stats}>Load from PoeDB</Button>
+        <StatsWindow stats={state.propRanges}/>
+        <Button onClick={onLoadClick} disabled={!state.stats}>Load from PoeDB</Button>
       </div>
-      <div className={statsStyles}>
-        {state.comparison && JSON.stringify(state.comparison, undefined, 2)}
-      </div>
+      <StatsWindow stats={state.comparison}/>
     </div>
   );
 };
