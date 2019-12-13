@@ -6,7 +6,7 @@ import Button from './Button';
 import { parseCopypasta, compareStats } from '../item';
 import { getUniqueInfo } from '../poedb';
 import { PropRanges, RawItem } from '../types';
-import { savePropRanges, loadPropRanges } from '../db';
+import { savePropRanges, loadPropRanges, saveUniqueScore } from '../db';
 
 const groupStyles = css`
   align-self: center;
@@ -82,6 +82,14 @@ const ItemStats = () => {
     }
   };
 
+  const onSaveClick = () => {
+    if (state.stats && state.comparison) {
+      const { name } = state.stats;
+      const { score } = state.comparison;
+      saveUniqueScore(name, score);
+    }
+  };
+
   return (
     <div className={groupStyles}>
       <Input className={statsStyles} onTextChange={handlePaste} />
@@ -90,7 +98,10 @@ const ItemStats = () => {
         <StatsWindow stats={state.propRanges}/>
         <Button onClick={onLoadClick} disabled={!state.stats}>Load from PoeDB</Button>
       </div>
-      <StatsWindow stats={state.comparison}/>
+      <div className={rangesContainerStyled}>
+        <StatsWindow stats={state.comparison}/>
+        <Button onClick={onSaveClick} disabled={!state.comparison}>Save as collected</Button>
+      </div>
     </div>
   );
 };
