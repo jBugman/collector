@@ -152,6 +152,8 @@ const generalizeModRange = (mod: string): Record<string, [number, number]> => {
 const scale = (x: number, bottom: number, top: number): number =>
   (x - bottom) / (top - bottom);
 
+const fixed = (x: number): number => parseFloat(x.toFixed(4));
+
 export const compareStats = (mods: string[], ranges: string[]) => {
   const modSet = new Set(mods);
   const rangeSet = new Set(ranges);
@@ -164,13 +166,13 @@ export const compareStats = (mods: string[], ranges: string[]) => {
     .reduce((acc, x) => ({ ...acc, ...x }), {});
   const combinedValues = Object.keys(modValues)
     .reduce((acc, k) => {
-      const score = scale(modValues[k], ...rangeValues[k]);
+      const score = fixed(scale(modValues[k], ...rangeValues[k]));
       return ({ ...acc, [k]: score });
     }, {});
   const scores = Object.values(combinedValues) as number[];
   const avg = scores.reduce((acc, x) => acc + x, 0) / scores.length;
   return {
     mods: combinedValues,
-    score: avg
+    score: fixed(avg),
   };
 };
