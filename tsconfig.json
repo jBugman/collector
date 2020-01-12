@@ -7,11 +7,15 @@
     "jsx": "preserve",
     "sourceMap": true,
     "strict": true,
-    "types": []
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "~*": [
+        "./src/*"
+      ]
+    }
   },
-  "exclude": [
-    "node_modules",
-    "output",
-    "dist"
+  "include": [
+    "src/**/*"
   ]
 }

@@ -1,12 +1,6 @@
 /* globals DOMParser, fetch */
-import { PropRanges } from './types';
-
-const proxy = 'https://cors-anywhere.herokuapp.com/'; // TODO: use own proxy
-
-const getURL = (name: string): string => {
-  name = name.replace('\'', '').replace(' ', '_');
-  return proxy + `https://poedb.tw/us/unique.php?n=${name}`;
-};
+import { PropRanges } from '~/types';
+import { getURL } from '~/purs/PoeDB';
 
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)
