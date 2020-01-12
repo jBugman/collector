@@ -1,3 +1,4 @@
 !.babelrc.js
 !.eslintrc.js
 src/purs/
+dist/
