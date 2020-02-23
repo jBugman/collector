@@ -19,7 +19,7 @@ const ES_PREFIX = 'Energy Shield:';
 
 const trimPrefix = (p: string, s: string): string => s.substr(p.length).trimLeft();
 
-export const parseCopypasta = (text: string): RawItem => {
+const parseCopypastaUnsafe = (text: string): RawItem => {
   const blocks = text.replace('\r', '').split(SEPARATOR);
 
   const item = {} as RawItem;
@@ -117,6 +117,15 @@ export const parseCopypasta = (text: string): RawItem => {
   return item;
 };
 
+export const parseCopypasta = (text: string): RawItem | null => {
+  try {
+    return parseCopypastaUnsafe(text);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
 const intersect = <T>(a: Set<T>, b: Set<T>): Set<T> =>
   new Set([...a].filter(x => b.has(x)));
 
@@ -171,9 +180,10 @@ const compareStatsUnsafe = (mods: string[], ranges: string[]) => {
     }, {});
   const scores = Object.values(combinedValues) as number[];
   const avg = scores.reduce((acc, x) => acc + x, 0) / scores.length;
+  const score = fixed(avg);
   return {
     mods: combinedValues,
-    score: fixed(avg),
+    score: isNaN(score) ? 1 : score,
   };
 };
 

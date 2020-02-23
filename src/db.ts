@@ -18,7 +18,6 @@ const saveList = (items: string[]) => {
 const indexItem = (name: string) => {
   const items = new Set(loadList());
   const i2 = items.add(name);
-  console.log(items, i2, i2.values(), items.values());
   saveList([...i2.values()]);
 };
 
