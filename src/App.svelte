@@ -4,7 +4,12 @@
   import StatsWindow from "~/components/StatsWindow";
   import { parseCopypasta, compareStats } from "~/item";
   import { getUniqueInfo } from "~/poedb";
-  import { savePropRanges, loadPropRanges, saveUniqueScore } from "~/db";
+  import {
+    loadPropRanges,
+    loadUniqueScore,
+    savePropRanges,
+    saveUniqueScore
+  } from "~/db";
 
   let text;
   let stats;
@@ -22,10 +27,18 @@
   $: if (stats) {
     propRanges = loadPropRanges(stats.name);
     comparison = null;
+  } else {
+    propRanges = null;
+    comparison = null;
   }
 
   $: if (stats && propRanges) {
-    comparison = compareStats(stats.explicitMods, propRanges.explicitMods);
+    const score = loadUniqueScore(stats.name);
+    const cmp = compareStats(stats.explicitMods, propRanges.explicitMods) || {};
+    comparison = {
+      ...cmp,
+      ...{ savedScore: score || undefined }
+    };
   }
 
   const onLoadClick = async () => {
