@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "parcel build src/index.html",
+    "build": "rm dist/* && parcel build --no-content-hash --no-source-maps src/index.html",
     "dev": "parcel --port 3000 src/index.html",
     "dev:purs": "spago build -w --purs-args '-o src/purs'",
     "lint": "tsc --noEmit && eslint ."
