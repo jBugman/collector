@@ -154,7 +154,7 @@ const scale = (x: number, bottom: number, top: number): number =>
 
 const fixed = (x: number): number => parseFloat(x.toFixed(4));
 
-export const compareStats = (mods: string[], ranges: string[]) => {
+const compareStatsUnsafe = (mods: string[], ranges: string[]) => {
   const modSet = new Set(mods);
   const rangeSet = new Set(ranges);
   const similar = intersect(modSet, rangeSet);
@@ -175,4 +175,12 @@ export const compareStats = (mods: string[], ranges: string[]) => {
     mods: combinedValues,
     score: fixed(avg),
   };
+};
+
+export const compareStats = (mods: string[], ranges: string[]) => {
+  try {
+    return compareStatsUnsafe(mods, ranges);
+  } catch (err) {
+    return null;
+  }
 };
