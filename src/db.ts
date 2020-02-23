@@ -1,38 +1,43 @@
-import { openDB } from 'idb';
-
 import { PropRanges } from './types';
 
-const DB_NAME = 'poedb';
-const TABLE_PROP_RANGES = 'prop_ranges';
-const TABLE_COLLECTION = 'collected_uniques';
+const PREFIX = 'collector';
+const LIST_KEY = `${PREFIX}:list`;
+const propsKey = (name: string) => `${PREFIX}:props:${name}`;
+const scoreKey = (name: string) => `${PREFIX}:score:${name}`;
 
-const dbPromise = openDB(DB_NAME, 3, {
-  upgrade: (db, v1, v2) => {
-    if (v2 === 1) {
-      db.createObjectStore(TABLE_PROP_RANGES);
-    }
-    if (v2 === 3) {
-      db.createObjectStore(TABLE_COLLECTION);
-    }
-  }
-});
-
-export const savePropRanges = async (name: string, data: PropRanges) => {
-  const db = await dbPromise;
-  db.put(TABLE_PROP_RANGES, data, name);
+const loadList = (): string[] => {
+  const json = window.localStorage.getItem(LIST_KEY) || '[]';
+  return JSON.parse(json);
 };
 
-export const loadPropRanges = async (name: string): Promise<PropRanges | undefined> => {
-  const db = await dbPromise;
-  return db.get(TABLE_PROP_RANGES, name);
+const saveList = (items: string[]) => {
+  const json = JSON.stringify(items);
+  window.localStorage.setItem(LIST_KEY, json);
 };
 
-export const saveUniqueScore = async (name: string, score: number) => {
-  const db = await dbPromise;
-  db.put(TABLE_COLLECTION, score, name);
+const indexItem = (name: string) => {
+  const items = new Set(loadList());
+  const i2 = items.add(name);
+  console.log(items, i2, i2.values(), items.values());
+  saveList([...i2.values()]);
 };
 
-export const loadUniqueScore = async (name: string): Promise<number | undefined> => {
-  const db = await dbPromise;
-  return db.get(TABLE_COLLECTION, name);
+export const savePropRanges = (name: string, data: PropRanges) => {
+  const blob = JSON.stringify(data);
+  window.localStorage.setItem(propsKey(name), blob);
+};
+
+export const loadPropRanges = (name: string): PropRanges | null => {
+  const blob = window.localStorage.getItem(propsKey(name));
+  return blob ? JSON.parse(blob) : null;
+};
+
+export const saveUniqueScore = (name: string, score: number) => {
+  window.localStorage.setItem(scoreKey(name), score.toString(10));
+  indexItem(name);
+};
+
+export const loadUniqueScore = (name: string): number | null => {
+  const val = window.localStorage.getItem(scoreKey(name));
+  return val ? parseFloat(val) : null;
 };

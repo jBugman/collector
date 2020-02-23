@@ -20,14 +20,8 @@
   }
 
   $: if (stats) {
-    loadPropRanges(stats.name)
-      .then(x => {
-        propRanges = x;
-      })
-      .catch(err => {
-        console.error(err);
-        propRanges = null;
-      });
+    propRanges = loadPropRanges(stats.name);
+    comparison = null;
   }
 
   $: if (stats && propRanges) {
