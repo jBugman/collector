@@ -11,10 +11,13 @@
     "dev:purs": "spago build -w --purs-args '-o src/purs'",
     "lint": "tsc --noEmit && eslint ."
   },
-  "dependencies": {},
+  "dependencies": {
+    "file-saver": "^2.0.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/preset-typescript": "^7.8.0",
+    "@types/file-saver": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
     "eslint": "^6.8.0",

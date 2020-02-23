@@ -1,9 +1,14 @@
+import { saveAs } from 'file-saver';
+
 import { PropRanges } from './types';
+import { trimPrefix } from '~/stringUtils';
 
 const PREFIX = 'collector';
 const LIST_KEY = `${PREFIX}:list`;
-const propsKey = (name: string) => `${PREFIX}:props:${name}`;
-const scoreKey = (name: string) => `${PREFIX}:score:${name}`;
+const PROPS_KEY = `${PREFIX}:props:`;
+const SCORE_KEY = `${PREFIX}:score:`;
+const propsKey = (name: string) => PROPS_KEY + name;
+const scoreKey = (name: string) => SCORE_KEY + name;
 
 const loadList = (): string[] => {
   const json = window.localStorage.getItem(LIST_KEY) || '[]';
@@ -40,3 +45,35 @@ export const loadUniqueScore = (name: string): number | null => {
   const val = window.localStorage.getItem(scoreKey(name));
   return val ? parseFloat(val) : null;
 };
+
+interface DBDump {
+  scores: Record<string, number>;
+  props: Record<string, object>;
+}
+
+const dumpDB = () => {
+  const entries = Object.entries(window.localStorage);
+  const result: DBDump = {
+    scores: {},
+    props: {},
+  };
+  entries.forEach(([k, v]) => {
+    if (k.startsWith(PROPS_KEY)) {
+      const name = trimPrefix(PROPS_KEY, k);
+      result.props[name] = JSON.parse(v);
+    } else if (k.startsWith(SCORE_KEY)) {
+      const name = trimPrefix(SCORE_KEY, k);
+      result.scores[name] = parseFloat(v);
+    }
+  });
+  const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json;charset=utf-8' });
+  saveAs(blob, 'database.json');
+};
+
+declare global {
+  interface Window {
+    saveCollectorDB: () => void;
+  }
+}
+
+window.saveCollectorDB = dumpDB;

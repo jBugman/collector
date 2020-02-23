@@ -1,4 +1,5 @@
 import { ItemClass, RawItem, SpecialType } from './types';
+import { trimPrefix } from '~/stringUtils';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
@@ -16,8 +17,6 @@ const ATTACK_SPEED_PREFIX = 'Attacks per Second:';
 const ARMOR_PREFIX = 'Armour:';
 const EVASION_PREFIX = 'Evasion Rating:';
 const ES_PREFIX = 'Energy Shield:';
-
-const trimPrefix = (p: string, s: string): string => s.substr(p.length).trimLeft();
 
 const parseCopypastaUnsafe = (text: string): RawItem => {
   const blocks = text.replace('\r', '').split(SEPARATOR);
