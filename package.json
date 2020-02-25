@@ -6,9 +6,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "rm dist/* && parcel build --no-content-hash --no-source-maps src/index.html",
-    "dev": "parcel --port 3000 src/index.html",
-    "dev:purs": "spago build -w --purs-args '-o src/purs'",
+    "build": "spago build -u '-o src/purs' && parcel build --no-content-hash --no-source-maps src/index.html",
+    "clean": "rm dist/*",
+    "dev": "spago build -w -u '-o src/purs' & parcel --port 3000 src/index.html",
     "lint": "tsc --noEmit && eslint ."
   },
   "dependencies": {
