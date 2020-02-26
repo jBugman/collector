@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 
 import { PropRanges } from './types';
-import { trimPrefix } from '~/stringUtils';
+import { trimPrefix } from '~/purs/Strings';
 
 const PREFIX = 'collector';
 const LIST_KEY = `${PREFIX}:list`;
