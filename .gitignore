@@ -6,3 +6,5 @@ dist/
 .spago/
 purs/
 .psc-ide-port
+.merlin
+lib/bs/
