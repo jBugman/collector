@@ -6,8 +6,9 @@
   "private": true,
   "scripts": {
     "build": "parcel build --no-content-hash --no-source-maps src/index.html",
-    "clean": "rm -rf ./.cache ./dist ./lib ./src/*.bs.js",
+    "clean": "rm -rf ./.cache ./dist ./lib ./src/*.bs.js ./__tests__/*.bs.js",
     "dev": "parcel --port 3000 src/index.html",
+    "test": "jest ./lib/js/__tests__",
     "lint": "tsc --noEmit && eslint ."
   },
   "dependencies": {
@@ -16,9 +17,11 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "@babel/preset-typescript": "^7.8.3",
+    "@glennsl/bs-jest": "^0.4.10",
     "@types/file-saver": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
+    "babel-jest": "^25.1.0",
     "bs-platform": "^7.1.1",
     "bsb-js": "^1.1.7",
     "eslint": "^6.8.0",
