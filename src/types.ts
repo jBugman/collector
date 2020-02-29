@@ -20,7 +20,7 @@ export enum SpecialType {
 }
 
 export interface RawItem {
-  rarity?: string; // TODO
+  rarity: string;
   ilvl: number;
   name: string;
   typeLine: string;

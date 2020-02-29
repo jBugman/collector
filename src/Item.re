@@ -1,6 +1,6 @@
 type rawItem = {
   name: string,
-  rarity: option(string),
+  rarity: string,
   ilvl: int,
 };
 
@@ -11,9 +11,18 @@ let fixed = x => {
   Js.Float.fromString(s);
 };
 
-let blocks = text => {
+type block = string;
+
+let blocks = (text: string): array(block) => {
   let separator = "--------";
   text
   |> Js.String.replaceByRe([%re "/\\r/"], "")
   |> Js.String.split(separator);
+};
+
+let getLines = (text: block): array(string) =>
+  Js.String.(text |> trim |> split("\n"));
+
+let rarity = (line: string): string => {
+  line |> Utils.trimPrefix("Rarity:") |> Js.String.trim;
 };

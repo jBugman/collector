@@ -31,11 +31,7 @@ Place into an allocated Jewel Socket on the Passive Skill Tree. Right click to r
     |js}
       |> Js.String.trim;
 
-    let correct: item = {
-      name: "Frozen Trail",
-      rarity: Some("Unique"),
-      ilvl: 82,
-    };
+    let correct: item = {name: "Frozen Trail", rarity: "Unique", ilvl: 82};
 
     expect(parse(text)) |> toBe(Some(correct));
   })
