@@ -1,3 +1,5 @@
     yarn install
-    yarn dev:purs
     yarn dev
+
+    yarn test
+    yarn build
