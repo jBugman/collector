@@ -1,6 +1,6 @@
 import { ItemClass, RawItem, SpecialType } from './types';
 import { trimPrefix } from './Utils.re';
-import { scale, fixed, blocks, getLines, rarity } from './Item.re';
+import { scale, fixed, blocks, getLines, rarity, parseImplicits } from './Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
@@ -111,7 +111,7 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
     item.explicitMods = varBlocks.pop() as string[];
   }
   if (varBlocks.length > 0) {
-    item.implicitMods = varBlocks.pop() as string[];
+    item.implicitMods = parseImplicits(varBlocks.pop() as string[]);
   }
 
   return item;

@@ -12,4 +12,5 @@ declare module '*/Item.re' {
   function blocks(text: string): string[];
   function getLines(text: string): string[];
   function rarity(line: string): string;
+  function parseImplicits(lines: string[]): string[];
 }

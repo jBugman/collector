@@ -31,9 +31,14 @@ let blocks = (text: string): array(block) => {
   |> Js.String.split(separator);
 };
 
-let getLines = (text: block): array(string) =>
+type lines = array(string);
+
+let getLines = (text: block): lines =>
   Js.String.(text |> trim |> split("\n"));
 
 let rarity = (line: string): string => {
   line |> Utils.trimPrefix("Rarity:") |> Js.String.trim;
 };
+
+let parseImplicits = (src: lines): array(rawImplicitMod) =>
+  Array.map(Js.String.replaceByRe([%re "/ \\(implicit\\)$/"], ""), src);
