@@ -24,7 +24,7 @@ export interface RawItem {
   ilvl: number;
   name: string;
   typeLine: string;
-  class: ItemClass;
+  itemClass: ItemClass;
   specialType?: SpecialType;
   implicitMods: string[];
   explicitMods: string[];

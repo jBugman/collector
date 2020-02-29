@@ -7,7 +7,7 @@ type item = Item.rawItem;
 external parse: string => option(item) = "parseCopypasta";
 
 describe("Parse", () => {
-  test("toBe", () => {
+  test("Frozen Trail", () => {
     let text =
       {js|
 Rarity: Unique
@@ -31,8 +31,20 @@ Place into an allocated Jewel Socket on the Passive Skill Tree. Right click to r
     |js}
       |> Js.String.trim;
 
-    let correct: item = {name: "Frozen Trail", rarity: "Unique", ilvl: 82};
+    let correct: item = {
+      name: "Frozen Trail",
+      rarity: "Unique",
+      itemClass: "Jewel",
+      typeLine: "Cobalt Jewel",
+      ilvl: 82,
+      implicitMods: [||],
+      explicitMods: [|
+        "10% increased Projectile Damage",
+        "With at least 40 Intelligence in Radius, Frostbolt fires 2 additional Projectiles",
+        "With at least 40 Intelligence in Radius, Frostbolt Projectiles gain 40% increased Projectile Speed per second",
+      |],
+    };
 
-    expect(parse(text)) |> toBe(Some(correct));
+    expect(parse(text)) |> toEqual(Some(correct));
   })
 });

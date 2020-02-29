@@ -20,7 +20,9 @@ const ES_PREFIX = 'Energy Shield:';
 const parseCopypastaUnsafe = (text: string): RawItem => {
   const bs = blocks(text);
 
-  const item = {} as RawItem;
+  const item = {
+    implicitMods: [] as string[],
+  } as RawItem;
 
   const varBlocks = [] as string[][];
 
@@ -34,10 +36,10 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
       item.typeLine = lines[2] || '';
       const typeWords = item.typeLine.split(' ');
       if (typeWords.some(w => w === TYPE_JEWEL)) {
-        item.class = ItemClass.Jewel;
+        item.itemClass = ItemClass.Jewel;
       }
       if (typeWords.some(w => w === TYPE_AMULET)) {
-        item.class = ItemClass.Jewelry;
+        item.itemClass = ItemClass.Jewelry;
       }
       return;
     }
@@ -45,11 +47,11 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
       // Base props
       if (header.startsWith(ARMOR_PREFIX) || header.startsWith(EVASION_PREFIX) || header.startsWith(ES_PREFIX)) {
         // Defensive stats
-        item.class = ItemClass.Armour;
+        item.itemClass = ItemClass.Armour;
         return;
       }
       if (lines.some(line => line.startsWith(ATTACK_SPEED_PREFIX))) {
-        item.class = ItemClass.Weapon;
+        item.itemClass = ItemClass.Weapon;
         return;
       }
       return;
@@ -94,7 +96,7 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
   }
 
   // Skip instruction fluff
-  if (item.class === ItemClass.Jewel || item.class === ItemClass.Map) {
+  if (item.itemClass === ItemClass.Jewel || item.itemClass === ItemClass.Map) {
     // FIXME: other types with instructions?
     varBlocks.pop();
   }

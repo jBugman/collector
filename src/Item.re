@@ -1,7 +1,18 @@
+type itemClass = string;
+// type itemClass =
+//   | Jewel;
+
+type rawImplicitMod = string;
+type rawExplicitMod = string;
+
 type rawItem = {
   name: string,
   rarity: string,
   ilvl: int,
+  itemClass,
+  typeLine: string,
+  implicitMods: array(rawImplicitMod),
+  explicitMods: array(rawExplicitMod),
 };
 
 let scale = (x, bottom, top) => (x -. bottom) /. (top -. bottom);
