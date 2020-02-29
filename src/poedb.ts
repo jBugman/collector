@@ -1,6 +1,5 @@
-/* globals DOMParser, fetch */
 import { PropRanges } from '~/types';
-import { getURL } from '~/purs/PoeDB';
+import { getURL } from '~/PoeDB.re';
 
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)

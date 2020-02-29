@@ -3,12 +3,11 @@
   "namespace": true,
   "sources": {
     "dir": "src",
-    "subdirs": true,
-    "public": []
+    "subdirs": true
   },
   "package-specs": {
     "module": "es6",
-    "in-source": false
+    "in-source": true
   },
   "suffix": ".bs.js",
   "bs-dependencies": [],

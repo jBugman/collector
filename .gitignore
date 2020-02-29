@@ -8,3 +8,4 @@ purs/
 .psc-ide-port
 .merlin
 lib/bs/
+*.bs.js

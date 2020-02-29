@@ -1,5 +1,5 @@
 import { ItemClass, RawItem, SpecialType } from './types';
-import { trimPrefix } from '~/purs/Strings';
+import { trimPrefix } from '~/Utils.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
