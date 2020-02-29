@@ -20,9 +20,7 @@ const ES_PREFIX = 'Energy Shield:';
 const parseCopypastaUnsafe = (text: string): RawItem => {
   const bs = blocks(text);
 
-  const item = {
-    implicitMods: [] as string[],
-  } as RawItem;
+  const item = {} as RawItem;
 
   const varBlocks = [] as string[][];
 
@@ -106,6 +104,7 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
     varBlocks.pop();
   }
 
+  item.implicitMods = [];
   // Real stat blocks are static
   if (varBlocks.length > 0) {
     item.explicitMods = varBlocks.pop() as string[];

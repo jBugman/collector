@@ -37,7 +37,7 @@
     const cmp = compareStats(stats.explicitMods, propRanges.explicitMods) || {};
     comparison = {
       ...cmp,
-      ...{ savedScore: score || undefined }
+      ...{ savedScore: score === null ? undefined : score }
     };
   }
 
