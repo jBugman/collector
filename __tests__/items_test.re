@@ -3,8 +3,8 @@ open Expect;
 
 type item = Item.rawItem;
 
-[@bs.module "../src/items.ts"]
-external parse: string => item = "parseCopypastaUnsafe";
+[@bs.module "../src/items"]
+external parse: string => option(item) = "parseCopypasta";
 
 describe("Parse", () => {
   test("toBe", () => {
@@ -31,8 +31,12 @@ Place into an allocated Jewel Socket on the Passive Skill Tree. Right click to r
     |js}
       |> Js.String.trim;
 
-    let correct: item = {rarity: Some("Unique"), ilvl: 82};
+    let correct: item = {
+      name: "Frozen Trail",
+      rarity: Some("Unique"),
+      ilvl: 82,
+    };
 
-    expect(parse(text)) |> toBe(correct);
+    expect(parse(text)) |> toBe(Some(correct));
   })
 });
