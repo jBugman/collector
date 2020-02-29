@@ -8,12 +8,7 @@
     "sourceMap": true,
     "strict": true,
     "types": [],
-    "baseUrl": ".",
-    "paths": {
-      "~*": [
-        "./src/*"
-      ]
-    }
+    "baseUrl": "."
   },
   "include": [
     "src/**/*"

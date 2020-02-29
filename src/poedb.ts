@@ -1,5 +1,5 @@
-import { PropRanges } from '~/types';
-import { poedbURL } from '~/Source.re';
+import { PropRanges } from './types';
+import { poedbURL } from './Source.re';
 
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)

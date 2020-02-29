@@ -1,15 +1,15 @@
 <script>
-  import Input from "~/components/Input";
-  import Ranges from "~/components/Ranges";
-  import StatsWindow from "~/components/StatsWindow";
-  import { parseCopypasta, compareStats } from "~/items";
-  import { getUniqueInfo } from "~/poedb";
+  import Input from "./components/Input";
+  import Ranges from "./components/Ranges";
+  import StatsWindow from "./components/StatsWindow";
+  import { parseCopypasta, compareStats } from "./items";
+  import { getUniqueInfo } from "./poedb";
   import {
     loadPropRanges,
     loadUniqueScore,
     savePropRanges,
     saveUniqueScore
-  } from "~/db";
+  } from "./db";
 
   let text;
   let stats;

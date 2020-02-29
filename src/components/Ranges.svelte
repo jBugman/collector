@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Button from "~/components/Button";
-  import StatsWindow from "~/components/StatsWindow";
+  import Button from "./Button";
+  import StatsWindow from "./StatsWindow";
 
   const dispatch = createEventDispatcher();
 

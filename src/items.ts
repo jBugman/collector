@@ -1,6 +1,6 @@
 import { ItemClass, RawItem, SpecialType } from './types';
-import { trimPrefix } from '~/Utils.re';
-import { scale, fixed, blocks } from '~/Item.re';
+import { trimPrefix } from './Utils.re';
+import { scale, fixed, blocks } from './Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
@@ -26,7 +26,6 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
   const varBlocks = [] as string[][];
 
   bs.forEach((block, idx) => {
-    console.log('block', block);
     const lines = block.trim().split('\n');
     const header = lines[0];
     if (idx === 0) {
