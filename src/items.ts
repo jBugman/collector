@@ -1,9 +1,9 @@
 import { ItemClass, RawItem, SpecialType } from './types';
 import { trimPrefix } from '~/Utils.re';
+import { scale, fixed, blocks } from '~/Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
-const SEPARATOR = '--------';
 const TYPE_JEWEL = 'Jewel';
 const TYPE_AMULET = 'Amulet';
 
@@ -19,13 +19,14 @@ const EVASION_PREFIX = 'Evasion Rating:';
 const ES_PREFIX = 'Energy Shield:';
 
 const parseCopypastaUnsafe = (text: string): RawItem => {
-  const blocks = text.replace('\r', '').split(SEPARATOR);
+  const bs = blocks(text);
 
   const item = {} as RawItem;
 
   const varBlocks = [] as string[][];
 
-  blocks.forEach((block, idx) => {
+  bs.forEach((block, idx) => {
+    console.log('block', block);
     const lines = block.trim().split('\n');
     const header = lines[0];
     if (idx === 0) {
@@ -156,11 +157,6 @@ const generalizeModRange = (mod: string): Record<string, [number, number]> => {
   });
   return { [key]: [x, y] };
 };
-
-const scale = (x: number, bottom: number, top: number): number =>
-  (x - bottom) / (top - bottom);
-
-const fixed = (x: number): number => parseFloat(x.toFixed(4));
 
 const compareStatsUnsafe = (mods: string[], ranges: string[]) => {
   const modSet = new Set(mods);

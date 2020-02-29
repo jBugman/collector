@@ -2,7 +2,7 @@
   import Input from "~/components/Input";
   import Ranges from "~/components/Ranges";
   import StatsWindow from "~/components/StatsWindow";
-  import { parseCopypasta, compareStats } from "~/item";
+  import { parseCopypasta, compareStats } from "~/items";
   import { getUniqueInfo } from "~/poedb";
   import {
     loadPropRanges,
