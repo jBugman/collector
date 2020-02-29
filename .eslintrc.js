@@ -18,8 +18,5 @@ module.exports = {
       objects: 'only-multiline',
     }],
     '@typescript-eslint/explicit-function-return-type': 'off',
-    // Fixes JSX with Solid
-    'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
   },
 };

@@ -5,9 +5,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "spago build -u '-o src/purs' && parcel build --no-content-hash --no-source-maps src/index.html",
-    "clean": "rm dist/*",
-    "dev": "spago build -w -u '-o src/purs' & parcel --port 3000 src/index.html",
+    "build": "parcel build --no-content-hash --no-source-maps src/index.html",
+    "clean": "rm -rf ./.cache ./dist ./lib ./src/*.bs.js",
+    "dev": "parcel --port 3000 src/index.html",
     "lint": "tsc --noEmit && eslint ."
   },
   "dependencies": {
@@ -31,8 +31,6 @@
     "eslint-plugin-standard": "^4.0.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-svelte": "^4.0.5",
-    "purescript": "^0.13.5",
-    "spago": "^0.13.1",
     "svelte": "^3.16.7",
     "svelte-preprocess": "^3.3.0",
     "typescript": "^3.7.4"
