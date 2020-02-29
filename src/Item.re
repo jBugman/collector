@@ -1,3 +1,9 @@
+type rawItem = {
+  name: string,
+  rarity: option(string),
+  ilvl: int,
+};
+
 let scale = (x, bottom, top) => (x -. bottom) /. (top -. bottom);
 
 let fixed = x => {
