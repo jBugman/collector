@@ -1,5 +1,5 @@
 import { PropRanges } from '~/types';
-import { getURL } from '~/PoeDB.re';
+import { poedbURL } from '~/Source.re';
 
 const parseModBlock = (el: Element): string[] =>
   [...el.childNodes] // triplets of (span, text, br)
@@ -22,7 +22,7 @@ const parseModBlock = (el: Element): string[] =>
       xs.map((x: Node) => x.textContent).join(''));
 
 export const getUniqueInfo = async (name: string): Promise<PropRanges> => {
-  const url = getURL(name);
+  const url = poedbURL(name);
   const data = await fetch(url, { mode: 'cors' });
   return data.text().then(body => {
     const doc = new DOMParser().parseFromString(body, 'text/html');

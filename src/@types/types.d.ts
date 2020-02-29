@@ -1,5 +1,5 @@
-declare module '~/PoeDB.re' {
-  function getURL(name: string): string;
+declare module '~/Source.re' {
+  function poedbURL(name: string): string;
 }
 
 declare module '~/Utils.re' {

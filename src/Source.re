@@ -1,4 +1,4 @@
-let getURL = name => {
+let poedbURL = name => {
   let proxy = "https://cors-anywhere.herokuapp.com/";
   let mangledName =
     name
