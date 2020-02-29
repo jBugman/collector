@@ -99,3 +99,55 @@ Life endures in Wraeclast.
     expect(parse(text)) |> toEqual(Some(correct));
   });
 });
+
+describe("Generalize mod", () => {
+  open Item;
+
+  test("Simple mod", () => {
+    let text = "21% increased Spell Damage";
+    let correct: itemMod = {
+      name: "X% increased Spell Damage",
+      values: Js.Dict.fromList([("X", 21.0)]),
+    };
+    expect(generalizeMod(text)) |> toEqual(correct);
+  });
+
+  test("Two-value mod", () => {
+    let text = "Adds 1 to 41 Lightning Damage";
+    let correct: itemMod = {
+      name: "Adds X to Y Lightning Damage",
+      values: Js.Dict.fromList([("X", 1.0), ("Y", 41.0)]),
+    };
+    expect(generalizeMod(text)) |> toEqual(correct);
+  });
+
+  test("Float mod", () => {
+    let text = "1.47% of Physical Attack Damage Leeched as Life";
+    let correct: itemMod = {
+      name: "X% of Physical Attack Damage Leeched as Life",
+      values: Js.Dict.fromList([("X", 1.47)]),
+    };
+    expect(generalizeMod(text)) |> toEqual(correct);
+  });
+});
+
+describe("Generalize mod range", () => {
+  open Item;
+  test("Simple mod", () => {
+    let text = {js|(10–20)% increased Elemental Damage|js};
+    let correct: modRange = {
+      name: "X% increased Elemental Damage",
+      values: Js.Dict.fromList([("X", (10.0, 20.0))]),
+    };
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
+
+  test("Double-range mod", () => {
+    let text = {js|Adds (2–5) to (7–10) Physical Damage to Attacks|js};
+    let correct: modRange = {
+      name: "Adds X to Y Physical Damage to Attacks",
+      values: Js.Dict.fromList([("X", (2.0, 5.0)), ("Y", (7.0, 10.0))]),
+    };
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
+});

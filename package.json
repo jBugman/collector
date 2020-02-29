@@ -8,7 +8,7 @@
     "build": "parcel build --no-content-hash --no-source-maps src/index.html",
     "clean": "rm -rf ./.cache ./dist ./lib ./src/*.bs.js ./tests/*.bs.js",
     "dev": "parcel --port 3000 src/index.html",
-    "test": "NODE_ENV=development yarn parcel build --no-source-maps ./tests/items_test.re -o ./dist/items.test.js && jest --noStackTrace ./dist/",
+    "test": "NODE_ENV=development yarn parcel build --no-source-maps ./tests/items_test.re -o ./dist/items.test.js && jest ",
     "lint": "tsc --noEmit && eslint ."
   },
   "dependencies": {

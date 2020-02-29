@@ -1,6 +1,4 @@
 type itemClass = string;
-// type itemClass =
-//   | Jewel;
 
 type rawImplicitMod = string;
 type rawExplicitMod = string;
@@ -42,3 +40,57 @@ let rarity = (line: string): string => {
 
 let parseImplicits = (src: lines): array(rawImplicitMod) =>
   Array.map(Js.String.replaceByRe([%re "/ \\(implicit\\)$/"], ""), src);
+
+type modName = string;
+type itemMod = {
+  name: modName,
+  values: Js.Dict.t(float),
+};
+type modRange = {
+  name: modName,
+  values: Js.Dict.t((float, float)),
+};
+
+let placeholders = [|"X", "Y", "Z"|];
+
+let generalizeMod = (line: rawExplicitMod): itemMod => {
+  let valueRegex = [%re "/([+-]?[0-9.]+)/giu"];
+  let values = Js.Dict.empty();
+  let idx = ref(0);
+  let name =
+    Js.String.unsafeReplaceBy0(
+      valueRegex,
+      (match, _, _) => {
+        let x = float_of_string(match);
+        let i = idx^;
+        let p = placeholders[i];
+        idx := i + 1;
+        Js.Dict.set(values, p, x);
+        p;
+      },
+      line,
+    );
+
+  {name, values};
+};
+
+let generalizeModRange = (line: string): modRange => {
+  let rangeRegex = [%re "/[+-]?\\(([0-9.]+)[-–]([0-9.]+)\\)/giu"];
+  let values = Js.Dict.empty();
+  let idx = ref(0);
+  let name =
+    Js.String.unsafeReplaceBy2(
+      rangeRegex,
+      (_, a, b, _, _) => {
+        let x = (float_of_string(a), float_of_string(b));
+        let i = idx^;
+        let p = placeholders[i];
+        idx := i + 1;
+        Js.Dict.set(values, p, x);
+        p;
+      },
+      line,
+    );
+
+  {name, values};
+};
