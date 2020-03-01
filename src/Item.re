@@ -42,20 +42,18 @@ let parseImplicits = (src: lines): array(rawImplicitMod) =>
   Array.map(Js.String.replaceByRe([%re "/ \\(implicit\\)$/"], ""), src);
 
 type modName = string;
-type itemMod = {
-  name: modName,
-  values: Js.Dict.t(float),
-};
-type modRange = {
-  name: modName,
-  values: Js.Dict.t((float, float)),
-};
+type value = Js.Dict.t(float);
+type itemMod = (modName, value);
+type range = Js.Dict.t((float, float));
+type modRange = (modName, range);
 
 let placeholders = [|"X", "Y", "Z"|];
 
 let generalizeMod = (line: rawExplicitMod): itemMod => {
+  module Dict = Js.Dict;
+
   let valueRegex = [%re "/([+-]?[0-9.]+)/giu"];
-  let values = Js.Dict.empty();
+  let values = Dict.empty();
   let idx = ref(0);
   let name =
     Js.String.unsafeReplaceBy0(
@@ -65,18 +63,22 @@ let generalizeMod = (line: rawExplicitMod): itemMod => {
         let i = idx^;
         let p = placeholders[i];
         idx := i + 1;
-        Js.Dict.set(values, p, x);
+        Dict.set(values, p, x);
         p;
       },
       line,
     );
 
-  {name, values};
+  (name, values);
 };
 
-let generalizeModRange = (line: string): modRange => {
+type rawRange = string;
+
+let generalizeModRange = (line: rawRange): modRange => {
+  module Dict = Js.Dict;
+
   let rangeRegex = [%re "/[+-]?\\(([0-9.]+)[-–]([0-9.]+)\\)/giu"];
-  let values = Js.Dict.empty();
+  let values = Dict.empty();
   let idx = ref(0);
   let name =
     Js.String.unsafeReplaceBy2(
@@ -86,11 +88,82 @@ let generalizeModRange = (line: string): modRange => {
         let i = idx^;
         let p = placeholders[i];
         idx := i + 1;
-        Js.Dict.set(values, p, x);
+        Dict.set(values, p, x);
         p;
       },
       line,
     );
 
-  {name, values};
+  (name, values);
+};
+
+let average = (xs: array(float)): float =>
+  Array.fold_left((+.), 0., xs) /. float_of_int(Array.length(xs));
+
+let scaleMod = (value: value, range: range): option(float) => {
+  module Dict = Js.Dict;
+
+  let score =
+    Dict.entries(value)
+    |> Array.map(((key, v)) => {
+         let (bottom, top) = Dict.unsafeGet(range, key);
+         scale(v, bottom, top);
+       })
+    |> average;
+
+  let inBounds = score >= 0. && score <= 1.;
+  inBounds ? Some(score) : None;
+};
+
+type itemScores =
+  | Scores({
+      mods: Js.Dict.t(float),
+      score: float,
+    })
+  | Legacy;
+
+let compareItemStats =
+    (mods: array(rawExplicitMod), ranges: array(rawRange)): itemScores => {
+  module Dict = Js.Dict;
+  module Set = Belt.Set.String;
+
+  let mods = mods |> Array.map(generalizeMod) |> Dict.fromArray;
+  let ranges = ranges |> Array.map(generalizeModRange) |> Dict.fromArray;
+
+  let modList =
+    Set.intersect(
+      mods |> Dict.keys |> Set.fromArray,
+      ranges |> Dict.keys |> Set.fromArray,
+    );
+
+  let dictSize = xs => xs |> Dict.keys |> Array.length;
+
+  let modCount = Set.size(modList);
+  let sc = modCount !== dictSize(mods) || modCount !== dictSize(ranges);
+  sc
+    ? Legacy
+    : {
+      let scores =
+        modList
+        |> Set.toArray
+        |> Array.map(key => {
+             scaleMod(
+               Dict.unsafeGet(mods, key),
+               Dict.unsafeGet(ranges, key),
+             )
+             ->(Belt.Option.map(score => (key, score)))
+           });
+
+      let goodScores = Belt.Array.keepMap(scores, x => x);
+      let hasOutOfBoundsScore =
+        Array.length(goodScores) < Array.length(scores);
+
+      hasOutOfBoundsScore
+        ? Legacy
+        : {
+          let scores = Dict.fromArray(goodScores);
+          let totalScore = Dict.values(scores) |> average;
+          Scores({mods: scores, score: fixed(totalScore)});
+        };
+    };
 };

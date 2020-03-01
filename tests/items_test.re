@@ -101,53 +101,129 @@ Life endures in Wraeclast.
 });
 
 describe("Generalize mod", () => {
+  module Dict = Js.Dict;
   open Item;
 
   test("Simple mod", () => {
     let text = "21% increased Spell Damage";
-    let correct: itemMod = {
-      name: "X% increased Spell Damage",
-      values: Js.Dict.fromList([("X", 21.0)]),
-    };
+    let correct: itemMod = (
+      "X% increased Spell Damage",
+      Dict.fromList([("X", 21.0)]),
+    );
     expect(generalizeMod(text)) |> toEqual(correct);
   });
 
   test("Two-value mod", () => {
     let text = "Adds 1 to 41 Lightning Damage";
-    let correct: itemMod = {
-      name: "Adds X to Y Lightning Damage",
-      values: Js.Dict.fromList([("X", 1.0), ("Y", 41.0)]),
-    };
+    let correct: itemMod = (
+      "Adds X to Y Lightning Damage",
+      Dict.fromList([("X", 1.0), ("Y", 41.0)]),
+    );
     expect(generalizeMod(text)) |> toEqual(correct);
   });
 
   test("Float mod", () => {
     let text = "1.47% of Physical Attack Damage Leeched as Life";
-    let correct: itemMod = {
-      name: "X% of Physical Attack Damage Leeched as Life",
-      values: Js.Dict.fromList([("X", 1.47)]),
-    };
+    let correct: itemMod = (
+      "X% of Physical Attack Damage Leeched as Life",
+      Dict.fromList([("X", 1.47)]),
+    );
     expect(generalizeMod(text)) |> toEqual(correct);
   });
 });
 
 describe("Generalize mod range", () => {
+  module Dict = Js.Dict;
   open Item;
   test("Simple mod", () => {
     let text = {js|(10–20)% increased Elemental Damage|js};
-    let correct: modRange = {
-      name: "X% increased Elemental Damage",
-      values: Js.Dict.fromList([("X", (10.0, 20.0))]),
-    };
+    let correct: modRange = (
+      "X% increased Elemental Damage",
+      Dict.fromList([("X", (10.0, 20.0))]),
+    );
     expect(generalizeModRange(text)) |> toEqual(correct);
   });
 
   test("Double-range mod", () => {
     let text = {js|Adds (2–5) to (7–10) Physical Damage to Attacks|js};
-    let correct: modRange = {
-      name: "Adds X to Y Physical Damage to Attacks",
-      values: Js.Dict.fromList([("X", (2.0, 5.0)), ("Y", (7.0, 10.0))]),
-    };
+    let correct: modRange = (
+      "Adds X to Y Physical Damage to Attacks",
+      Dict.fromList([("X", (2.0, 5.0)), ("Y", (7.0, 10.0))]),
+    );
     expect(generalizeModRange(text)) |> toEqual(correct);
+  });
+});
+
+describe("Scale mod", () => {
+  module Dict = Js.Dict;
+
+  test("Single var", () => {
+    let mods = Dict.fromList([("X", 15.0)]);
+    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
+    let correct = Some(0.5);
+    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Two vars", () => {
+    let mods = Dict.fromList([("X", 15.0), ("Y", 2.0)]);
+    let ranges = Dict.fromList([("Y", (2.0, 3.0)), ("X", (10.0, 20.0))]);
+    let correct = Some(0.25);
+    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Out of bounds low", () => {
+    let mods = Dict.fromList([("X", 5.0)]);
+    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
+    let correct = None;
+    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Out of bounds high", () => {
+    let mods = Dict.fromList([("X", 50.0)]);
+    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
+    let correct = None;
+    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+});
+
+describe("Compare mods", () => {
+  module Dict = Js.Dict;
+
+  test("Different mods legacy", () => {
+    let mods = [|"+15 to maximum Life", "+20 to maximum Mana"|];
+    let ranges = [|
+      {js|+(15–20) to maximum Life|js},
+      {js|(5–8)% increased Cast Speed|js},
+    |];
+    let correct = Item.Legacy;
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Different values legacy", () => {
+    let mods = [|"+15 to maximum Life", "+20 to maximum Mana"|];
+    let ranges = [|
+      {js|+(15–20) to maximum Life|js},
+      {js|+(100–200) to maximum Mana|js},
+    |];
+    let correct = Item.Legacy;
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Regular item", () => {
+    let mods = [|"+15 to maximum Life", "+20 to maximum Mana"|];
+    let ranges = [|
+      {js|+(15–20) to maximum Life|js},
+      {js|+(15–20) to maximum Mana|js},
+    |];
+    let correct =
+      Item.Scores({
+        mods:
+          Dict.fromList([
+            ("X to maximum Life", 0.),
+            ("X to maximum Mana", 1.),
+          ]),
+        score: 0.5,
+      });
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
   });
 });
