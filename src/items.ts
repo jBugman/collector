@@ -1,6 +1,6 @@
 import { ItemClass, RawItem, SpecialType } from './types';
 import { trimPrefix } from './Utils.re';
-import { scale, fixed, blocks, getLines, rarity, parseImplicits } from './Item.re';
+import { blocks, getLines, rarity, parseImplicits } from './Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
@@ -17,7 +17,7 @@ const ARMOR_PREFIX = 'Armour:';
 const EVASION_PREFIX = 'Evasion Rating:';
 const ES_PREFIX = 'Energy Shield:';
 
-const parseCopypastaUnsafe = (text: string): RawItem => {
+const parseCopypasta = (text: string): RawItem => {
   const bs = blocks(text);
 
   const item = {} as RawItem;
@@ -116,75 +116,11 @@ const parseCopypastaUnsafe = (text: string): RawItem => {
   return item;
 };
 
-export const parseCopypasta = (text: string): RawItem | null => {
+export const parseCopypastaNullable = (text: string): RawItem | null => {
   try {
-    return parseCopypastaUnsafe(text);
+    return parseCopypasta(text);
   } catch (err) {
     console.log(err);
-    return null;
-  }
-};
-
-const intersect = <T>(a: Set<T>, b: Set<T>): Set<T> =>
-  new Set([...a].filter(x => b.has(x)));
-
-const diff = <T>(a: Set<T>, b: Set<T>): Set<T> =>
-  new Set([...a].filter(x => !b.has(x)));
-
-const valueRegex = /([+-]?[0-9.]+)/giu;
-const generalizeMod = (mod: string): Record<string, number> => {
-  let x = 0;
-  const key = mod.replace(valueRegex, m => {
-    x = parseFloat(m);
-    return 'X';
-  });
-  return { [key]: x };
-};
-
-const getRealMatches = (xs: string[]) =>
-  [...xs.slice(2, 4), ...xs.slice(0, 4)].slice(0, 2);
-
-const rangeRegex = new RegExp(`([+-]?\\(${valueRegex.source}[-–]${valueRegex.source}\\)|${valueRegex.source})`, 'giu');
-const generalizeModRange = (mod: string): Record<string, [number, number]> => {
-  let x = 0;
-  let y = 0;
-  const key = mod.replace(rangeRegex, (...args) => {
-    const [x_, y_] = getRealMatches(args);
-    x = parseFloat(x_);
-    y = parseFloat(y_);
-    return 'X';
-  });
-  return { [key]: [x, y] };
-};
-
-const compareStatsUnsafe = (mods: string[], ranges: string[]) => {
-  const modSet = new Set(mods);
-  const rangeSet = new Set(ranges);
-  const similar = intersect(modSet, rangeSet);
-  const modValues = [...diff(modSet, similar).values()]
-    .map(generalizeMod)
-    .reduce((acc, x) => ({ ...acc, ...x }), {});
-  const rangeValues = [...diff(rangeSet, similar).values()]
-    .map(generalizeModRange)
-    .reduce((acc, x) => ({ ...acc, ...x }), {});
-  const combinedValues = Object.keys(modValues)
-    .reduce((acc, k) => {
-      const score = fixed(scale(modValues[k], ...rangeValues[k]));
-      return ({ ...acc, [k]: score });
-    }, {});
-  const scores = Object.values(combinedValues) as number[];
-  const avg = scores.reduce((acc, x) => acc + x, 0) / scores.length;
-  const score = fixed(avg);
-  return {
-    mods: combinedValues,
-    score: isNaN(score) ? 1 : score,
-  };
-};
-
-export const compareStats = (mods: string[], ranges: string[]) => {
-  try {
-    return compareStatsUnsafe(mods, ranges);
-  } catch (err) {
     return null;
   }
 };

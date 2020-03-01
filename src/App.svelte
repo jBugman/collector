@@ -2,7 +2,7 @@
   import Input from "./components/Input";
   import Ranges from "./components/Ranges";
   import StatsWindow from "./components/StatsWindow";
-  import { parseCopypasta, compareStats } from "./items";
+  import { parseCopypastaNullable } from "./items";
   import { getUniqueInfo } from "./poedb";
   import {
     loadPropRanges,
@@ -10,6 +10,7 @@
     savePropRanges,
     saveUniqueScore
   } from "./db";
+  import { compareItemStatsNullable } from "./Item.re";
 
   let text;
   let stats;
@@ -17,7 +18,7 @@
   let comparison;
 
   $: if (text) {
-    stats = parseCopypasta(text);
+    stats = parseCopypastaNullable(text);
   } else {
     stats = null;
     propRanges = null;
@@ -34,11 +35,18 @@
 
   $: if (stats && propRanges) {
     const score = loadUniqueScore(stats.name);
-    const cmp = compareStats(stats.explicitMods, propRanges.explicitMods) || {};
-    comparison = {
-      ...cmp,
-      ...{ savedScore: score === null ? undefined : score }
-    };
+    const cmp = compareItemStatsNullable(
+      stats.explicitMods,
+      propRanges.explicitMods
+    );
+    if (cmp === null) {
+      alert("This is a legacy item");
+    } else {
+      comparison = {
+        ...cmp,
+        ...{ savedScore: score === null ? undefined : score }
+      };
+    }
   }
 
   const onLoadClick = async () => {

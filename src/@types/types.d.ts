@@ -7,10 +7,15 @@ declare module '*/Utils.re' {
 }
 
 declare module '*/Item.re' {
-  function scale(x: number, bottom: number, top: number): number;
-  function fixed(x: number): number;
   function blocks(text: string): string[];
   function getLines(text: string): string[];
   function rarity(line: string): string;
   function parseImplicits(lines: string[]): string[];
+
+  interface ItemScores {
+    mods: Record<string, number>;
+    score: number;
+  }
+
+  function compareItemStatsNullable(mods: string[], ranges: string[]): ItemScores | null;
 }

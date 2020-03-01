@@ -115,15 +115,16 @@ let scaleMod = (value: value, range: range): option(float) => {
   inBounds ? Some(score) : None;
 };
 
-type itemScores =
-  | Scores({
-      mods: Js.Dict.t(float),
-      score: float,
-    })
+type itemScores = {
+  mods: Js.Dict.t(float),
+  score: float,
+};
+type anyItemScores =
+  | Scores(itemScores)
   | Legacy;
 
 let compareItemStats =
-    (mods: array(rawExplicitMod), ranges: array(rawRange)): itemScores => {
+    (mods: array(rawExplicitMod), ranges: array(rawRange)): anyItemScores => {
   module Dict = Js.Dict;
   module Set = Belt.Set.String;
 
@@ -167,3 +168,11 @@ let compareItemStats =
         };
     };
 };
+
+let compareItemStatsNullable =
+    (mods: array(rawExplicitMod), ranges: array(rawRange))
+    : Js.Nullable.t(itemScores) =>
+  switch (compareItemStats(mods, ranges)) {
+  | Scores(result) => Js.Nullable.return(result)
+  | Legacy => Js.Nullable.null
+  };
