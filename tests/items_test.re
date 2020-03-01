@@ -4,7 +4,7 @@ open Expect;
 type item = Item.rawItem;
 
 [@bs.module "../src/items"]
-external parse: string => option(item) = "parseCopypasta";
+external parse: string => Js.Nullable.t(item) = "parseCopypastaNullable";
 
 describe("Parse", () => {
   test("Frozen Trail", () => {
@@ -44,8 +44,9 @@ Place into an allocated Jewel Socket on the Passive Skill Tree. Right click to r
         "With at least 40 Intelligence in Radius, Frostbolt Projectiles gain 40% increased Projectile Speed per second",
       |],
     };
+    let correct = Js.Nullable.return(correct);
 
-    expect(parse(text)) |> toEqual(Some(correct));
+    expect(parse(text)) |> toEqual(correct);
   });
 
   test("Lifesprig", () => {
@@ -95,8 +96,9 @@ Life endures in Wraeclast.
         "Regenerate 8 Life over 1 second when you Cast a Spell",
       |],
     };
+    let correct = Js.Nullable.return(correct);
 
-    expect(parse(text)) |> toEqual(Some(correct));
+    expect(parse(text)) |> toEqual(correct);
   });
 });
 
