@@ -1,5 +1,6 @@
 <script>
   export let stats;
+  export let error = null;
 
   $: text = stats ? JSON.stringify(stats, undefined, 2) : "";
 </script>
@@ -16,4 +17,4 @@
   }
 </style>
 
-<div>{text}</div>
+<div>{error || text}</div>

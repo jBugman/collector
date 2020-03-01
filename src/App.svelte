@@ -16,6 +16,7 @@
   let stats;
   let propRanges;
   let comparison;
+  let error;
 
   $: if (text) {
     stats = parseCopypastaNullable(text);
@@ -40,7 +41,8 @@
       propRanges.explicitMods
     );
     if (cmp === null) {
-      alert("This is a legacy item");
+      error = "This is a legacy item";
+      comparison = null;
     } else {
       comparison = {
         ...cmp,
@@ -88,6 +90,7 @@
     disabled={!stats}
     on:buttonClick={onLoadClick} />
   <Ranges
+    {error}
     ranges={comparison}
     buttonLabel="Save as collected"
     disabled={!comparison}

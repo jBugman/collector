@@ -5,6 +5,7 @@
 
   const dispatch = createEventDispatcher();
 
+  export let error = null;
   export let ranges;
   export let disabled;
   export let buttonLabel;
@@ -19,7 +20,7 @@
 </style>
 
 <section>
-  <StatsWindow stats={ranges} />
+  <StatsWindow stats={ranges} {error} />
   <Button on:click={() => dispatch('buttonClick')} {disabled}>
     {buttonLabel}
   </Button>
