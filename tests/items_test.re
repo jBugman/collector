@@ -141,7 +141,7 @@ describe("Generalize mod range", () => {
     let text = {js|(10–20)% increased Elemental Damage|js};
     let correct: modRange = (
       "X% increased Elemental Damage",
-      Dict.fromList([("X", (10.0, 20.0))]),
+      Dict.fromList([("X", Some((10.0, 20.0)))]),
     );
     expect(generalizeModRange(text)) |> toEqual(correct);
   });
@@ -150,7 +150,16 @@ describe("Generalize mod range", () => {
     let text = {js|Adds (2–5) to (7–10) Physical Damage to Attacks|js};
     let correct: modRange = (
       "Adds X to Y Physical Damage to Attacks",
-      Dict.fromList([("X", (2.0, 5.0)), ("Y", (7.0, 10.0))]),
+      Dict.fromList([("X", Some((2.0, 5.0))), ("Y", Some((7.0, 10.0)))]),
+    );
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
+
+  test("Constant mod", () => {
+    let text = {js|+1 to Level of Socketed Spell Gems|js};
+    let correct: modRange = (
+      "X to Level of Socketed Spell Gems",
+      Dict.fromList([("X", None)]),
     );
     expect(generalizeModRange(text)) |> toEqual(correct);
   });
@@ -158,33 +167,49 @@ describe("Generalize mod range", () => {
 
 describe("Scale mod", () => {
   module Dict = Js.Dict;
+  open Item;
 
   test("Single var", () => {
     let mods = Dict.fromList([("X", 15.0)]);
-    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
-    let correct = Some(0.5);
-    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+    let ranges = Dict.fromList([("X", Some((10.0, 20.0)))]);
+    let correct = Score(0.5);
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
   });
 
   test("Two vars", () => {
     let mods = Dict.fromList([("X", 15.0), ("Y", 2.0)]);
-    let ranges = Dict.fromList([("Y", (2.0, 3.0)), ("X", (10.0, 20.0))]);
-    let correct = Some(0.25);
-    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+    let ranges =
+      Dict.fromList([("Y", Some((2.0, 3.0))), ("X", Some((10.0, 20.0)))]);
+    let correct = Score(0.25);
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
   });
 
   test("Out of bounds low", () => {
     let mods = Dict.fromList([("X", 5.0)]);
-    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
-    let correct = None;
-    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+    let ranges = Dict.fromList([("X", Some((10.0, 20.0)))]);
+    let correct = OutOfBounds;
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
   });
 
   test("Out of bounds high", () => {
     let mods = Dict.fromList([("X", 50.0)]);
-    let ranges = Dict.fromList([("X", (10.0, 20.0))]);
-    let correct = None;
-    expect(Item.scaleMod(mods, ranges)) |> toEqual(correct);
+    let ranges = Dict.fromList([("X", Some((10.0, 20.0)))]);
+    let correct = OutOfBounds;
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("No vars", () => {
+    let mods = Dict.empty();
+    let ranges = Dict.empty();
+    let correct = Constant;
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Constant range", () => {
+    let mods = Dict.fromList([("X", 50.0)]);
+    let ranges = Dict.fromList([("X", None)]);
+    let correct = Constant;
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
   });
 });
 
@@ -221,10 +246,27 @@ describe("Compare mods", () => {
       Item.Scores({
         mods:
           Dict.fromList([
-            ("X to maximum Life", 0.),
-            ("X to maximum Mana", 1.),
+            ("X to maximum Life", 0.0),
+            ("X to maximum Mana", 1.0),
           ]),
         score: 0.5,
+      });
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Constant mod", () => {
+    let mods = [|
+      "+15 to maximum Life",
+      "+1 to Level of Socketed Spell Gems",
+    |];
+    let ranges = [|
+      {js|+(15–20) to maximum Life|js},
+      {js|+1 to Level of Socketed Spell Gems|js},
+    |];
+    let correct =
+      Item.Scores({
+        mods: Dict.fromList([("X to maximum Life", 0.0)]),
+        score: 0.0,
       });
     expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
   });
