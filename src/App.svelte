@@ -45,6 +45,7 @@
       error = "This is a legacy item";
       comparison = null;
     } else {
+      error = null;
       comparison = {
         ...cmp,
         ...{ savedScore: score === null ? undefined : score }
