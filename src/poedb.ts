@@ -21,7 +21,7 @@ const parseModBlock = (el: Element): string[] =>
     .map((xs: Node[]) =>
       xs.map((x: Node) => x.textContent).join(''));
 
-export const getUniqueInfo = async (name: string): Promise<PropRanges> => {
+export const getPoedbInfo = async (name: string): Promise<PropRanges> => {
   const url = poedbURL(name);
   const data = await fetch(url, { mode: 'cors' });
   return data.text().then(body => {

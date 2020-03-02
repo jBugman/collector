@@ -1,5 +1,6 @@
 declare module '*/Source.re' {
   function poedbURL(name: string): string;
+  function getWikiInfo(name: string): void;
 }
 
 declare module '*/Utils.re' {

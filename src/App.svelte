@@ -3,7 +3,8 @@
   import Ranges from "./components/Ranges";
   import StatsWindow from "./components/StatsWindow";
   import { parseCopypastaNullable } from "./items";
-  import { getUniqueInfo } from "./poedb";
+  import { getPoedbInfo } from "./poedb";
+  import { getWikiInfo } from "./Source.re";
   import {
     loadPropRanges,
     loadUniqueScore,
@@ -51,10 +52,18 @@
     }
   }
 
-  const onLoadClick = async () => {
+  const onLoadPoedbClick = async () => {
     if (stats) {
       const { name } = stats;
-      propRanges = await getUniqueInfo(name);
+      propRanges = await getPoedbInfo(name);
+      savePropRanges(name, propRanges);
+    }
+  };
+
+  const onLoadWikiClick = async () => {
+    if (stats) {
+      const { name } = stats;
+      propRanges = await getWikiInfo(name);
       savePropRanges(name, propRanges);
     }
   };
@@ -86,9 +95,14 @@
   <StatsWindow {stats} />
   <Ranges
     ranges={propRanges}
+    buttonLabel="Load from Wiki"
+    disabled={!stats}
+    on:buttonClick={onLoadWikiClick} />
+  <!-- <Ranges
+    ranges={propRanges}
     buttonLabel="Load from PoeDB"
     disabled={!stats}
-    on:buttonClick={onLoadClick} />
+    on:buttonClick={onPoedbLoadClick} /> -->
   <Ranges
     {error}
     ranges={comparison}
