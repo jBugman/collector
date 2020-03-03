@@ -6,11 +6,12 @@
     border-radius: 5px;
     font-size: 14px;
   }
-  button:hover {
+  button:hover:enabled,
+  button:active:enabled {
     color: #f6c66a;
   }
 </style>
 
-<button on:click>
+<button {...$$props}>
   <slot />
 </button>

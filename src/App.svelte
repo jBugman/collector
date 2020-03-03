@@ -1,4 +1,5 @@
 <script>
+  import Button from "./components/Button";
   import Input from "./components/Input";
   import Ranges from "./components/Ranges";
   import StatsWindow from "./components/StatsWindow";
@@ -14,7 +15,7 @@
   import { compareItemStatsNullable } from "./Item.re";
 
   let text;
-  let stats;
+  let stats = null;
   let propRanges;
   let comparison;
   let error;
@@ -94,20 +95,15 @@
 <main>
   <Input bind:text />
   <StatsWindow {stats} />
-  <Ranges
-    ranges={propRanges}
-    buttonLabel="Load from Wiki"
-    disabled={!stats}
-    on:buttonClick={onLoadWikiClick} />
-  <!-- <Ranges
-    ranges={propRanges}
-    buttonLabel="Load from PoeDB"
-    disabled={!stats}
-    on:buttonClick={onPoedbLoadClick} /> -->
-  <Ranges
-    {error}
-    ranges={comparison}
-    buttonLabel="Save as collected"
-    disabled={!comparison}
-    on:buttonClick={onSaveClick} />
+  <Ranges ranges={propRanges}>
+    <Button on:click={onLoadPoedbClick} disabled={!stats}>
+      Load from PoeDB
+    </Button>
+    <Button on:click={onLoadWikiClick} disabled={!stats}>Load from Wiki</Button>
+  </Ranges>
+  <Ranges {error} ranges={comparison}>
+    <Button on:click={onSaveClick} disabled={!comparison}>
+      Save as collected
+    </Button>
+  </Ranges>
 </main>
