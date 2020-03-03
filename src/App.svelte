@@ -5,7 +5,7 @@
   import StatsWindow from "./components/StatsWindow";
   import { parseCopypastaNullable } from "./items";
   import { getPoedbInfo } from "./poedb";
-  import { getWikiInfo } from "./Source.re";
+  import { getWikiInfo, filterBadMods } from "./Source.re";
   import {
     loadPropRanges,
     loadUniqueScore,
@@ -58,7 +58,7 @@
   const onLoadPoedbClick = async () => {
     if (stats) {
       const { name } = stats;
-      propRanges = await getPoedbInfo(name);
+      propRanges = filterBadMods(await getPoedbInfo(name));
       savePropRanges(name, propRanges);
     }
   };
@@ -66,7 +66,7 @@
   const onLoadWikiClick = async () => {
     if (stats) {
       const { name } = stats;
-      propRanges = await getWikiInfo(name);
+      propRanges = filterBadMods(await getWikiInfo(name));
       savePropRanges(name, propRanges);
     }
   };

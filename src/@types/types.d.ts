@@ -1,6 +1,9 @@
+import { PropRanges } from '../types';
+
 declare module '*/Source.re' {
   function poedbURL(name: string): string;
   function getWikiInfo(name: string): void;
+  function filterBadMods(mods: PropRanges): PropRanges;
 }
 
 declare module '*/Utils.re' {

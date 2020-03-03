@@ -35,6 +35,15 @@ type propRanges = {
   explicitMods: array(string),
 };
 
+let badMods = Belt.Set.String.fromArray([|"Avoids Frozen"|]);
+
+let filterBadMods = (pps: propRanges): propRanges => {
+  let {implicitMods, explicitMods} = pps;
+  let explicitMods =
+    Belt.Array.keep(explicitMods, x => !Belt.Set.String.has(badMods, x));
+  {implicitMods, explicitMods};
+};
+
 let parseWiki = (source): propRanges => {
   open Webapi.Dom;
 
