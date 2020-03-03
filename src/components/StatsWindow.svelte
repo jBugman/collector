@@ -2,14 +2,7 @@
   export let stats;
   export let error = null;
 
-  let text = "";
-
-  $: if (stats) {
-    const { implicitMods, explicitMods } = stats;
-    text = JSON.stringify({ implicitMods, explicitMods }, undefined, 2);
-  } else {
-    text = "";
-  }
+  $: text = stats ? JSON.stringify(stats, undefined, 2) : "";
 </script>
 
 <style>

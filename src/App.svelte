@@ -19,6 +19,7 @@
   let propRanges;
   let comparison;
   let error;
+  let displayedStats;
 
   $: if (text) {
     stats = parseCopypastaNullable(text);
@@ -30,9 +31,12 @@
   }
 
   $: if (stats) {
-    propRanges = loadPropRanges(stats.name);
+    propRanges = filterBadMods(loadPropRanges(stats.name));
+    const { implicitMods, explicitMods } = stats;
+    displayedStats = { implicitMods, explicitMods };
     comparison = null;
   } else {
+    displayedStats = null;
     propRanges = null;
     comparison = null;
   }
@@ -95,7 +99,7 @@
 
 <main>
   <Input bind:text />
-  <StatsWindow {stats} />
+  <StatsWindow stats={displayedStats} />
   <Ranges ranges={propRanges}>
     <Button on:click={onLoadPoedbClick} disabled={!stats}>
       Load from PoeDB
