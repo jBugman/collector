@@ -15,7 +15,7 @@
   import { compareItemStatsNullable } from "./Item.re";
 
   let text;
-  let stats = null;
+  let stats;
   let propRanges;
   let comparison;
   let error;
@@ -23,6 +23,7 @@
   $: if (text) {
     stats = parseCopypastaNullable(text);
   } else {
+    error = null;
     stats = null;
     propRanges = null;
     comparison = null;
