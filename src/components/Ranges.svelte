@@ -1,9 +1,6 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import Button from "./Button";
   import StatsWindow from "./StatsWindow";
-
-  const dispatch = createEventDispatcher();
 
   export let error = null;
   export let ranges;

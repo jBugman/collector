@@ -1,3 +1,7 @@
+<script>
+  export let disabled = false;
+</script>
+
 <style>
   button {
     background: linear-gradient(180deg, #1f0c04 0%, #bd351e 100%);
@@ -12,6 +16,6 @@
   }
 </style>
 
-<button {...$$props}>
+<button on:click {disabled}>
   <slot />
 </button>
