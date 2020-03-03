@@ -1,6 +1,6 @@
-import { PropRanges } from '../types';
-
 declare module '*/Source.re' {
+  type PropRanges = import('../types').PropRanges;
+
   function poedbURL(name: string): string;
   function getWikiInfo(name: string): void;
   function filterBadMods(mods: PropRanges): PropRanges;

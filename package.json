@@ -9,7 +9,7 @@
     "clean": "rm -rf ./.cache ./dist ./lib ./src/*.bs.js ./tests/*.bs.js",
     "dev": "parcel --port 3000 src/index.html",
     "test": "NODE_ENV=development yarn parcel build --no-source-maps ./tests/items_test.re -o ./dist/items.test.js && jest --noStackTrace ./dist",
-    "lint": "tsc --noEmit && eslint ."
+    "lint": "tsc --noEmit && eslint ./**/*.ts"
   },
   "dependencies": {
     "bs-fetch": "^0.5.2",
