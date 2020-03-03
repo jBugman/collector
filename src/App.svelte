@@ -15,69 +15,45 @@
   import { compareItemStatsNullable } from "./Item.re";
 
   let text;
-  let stats;
-  let propRanges;
-  let comparison;
-  let error;
-  let displayedStats;
 
-  $: if (text) {
-    stats = parseCopypastaNullable(text);
-  } else {
-    error = null;
-    stats = null;
-    propRanges = null;
-    comparison = null;
-  }
+  $: stats = text ? parseCopypastaNullable(text) : null;
 
-  $: if (stats) {
-    propRanges = filterBadMods(loadPropRanges(stats.name));
-    const { implicitMods, explicitMods } = stats;
-    displayedStats = { implicitMods, explicitMods };
-    comparison = null;
-  } else {
-    displayedStats = null;
-    propRanges = null;
-    comparison = null;
-  }
+  $: displayedStats = stats
+    ? { implicit: stats.implicitMods, explicit: stats.explicitMods }
+    : null;
 
-  $: if (stats && propRanges) {
-    const score = loadUniqueScore(stats.name);
-    const cmp = compareItemStatsNullable(
-      stats.explicitMods,
-      propRanges.explicitMods
-    );
-    if (cmp === null) {
-      error = "This is a legacy item";
-      comparison = null;
-    } else {
-      error = null;
-      comparison = {
-        ...cmp,
-        ...{ savedScore: score === null ? undefined : score }
+  $: score = stats ? loadUniqueScore(stats.name) : 0;
+
+  $: rawPropRanges = stats ? loadPropRanges(stats.name) : null;
+  $: propRanges = rawPropRanges ? filterBadMods(rawPropRanges) : null;
+
+  $: comparison =
+    !!stats && !!propRanges
+      ? compareItemStatsNullable(stats.explicitMods, propRanges.explicitMods)
+      : undefined;
+
+  $: error = comparison === null ? "This is a legacy item" : null;
+
+  $: scores = !comparison
+    ? null
+    : {
+        ...comparison,
+        savedScore: score === null ? undefined : score
       };
-    }
-  }
 
   const onLoadPoedbClick = async () => {
-    if (stats) {
-      const { name } = stats;
-      propRanges = filterBadMods(await getPoedbInfo(name));
-      savePropRanges(name, propRanges);
-    }
+    const { name } = stats;
+    propRanges = filterBadMods(await getPoedbInfo(name));
+    savePropRanges(name, propRanges);
   };
 
   const onLoadWikiClick = async () => {
-    if (stats) {
-      const { name } = stats;
-      propRanges = filterBadMods(await getWikiInfo(name));
-      savePropRanges(name, propRanges);
-    }
+    const { name } = stats;
+    propRanges = filterBadMods(await getWikiInfo(name));
+    savePropRanges(name, propRanges);
   };
 
   const onSaveClick = () => {
-    if (!stats || !comparison) return;
-
     const { name } = stats;
     const { score } = comparison;
     saveUniqueScore(name, score);
@@ -106,7 +82,7 @@
     </Button>
     <Button on:click={onLoadWikiClick} disabled={!stats}>Load from Wiki</Button>
   </Ranges>
-  <Ranges {error} ranges={comparison}>
+  <Ranges {error} ranges={scores}>
     <Button on:click={onSaveClick} disabled={!comparison}>
       Save as collected
     </Button>
