@@ -6,12 +6,8 @@
   import { parseCopypastaNullable } from "./items";
   import { getPoedbInfo } from "./poedb";
   import { getWikiInfo, filterBadMods } from "./Source.re";
-  import {
-    loadPropRanges,
-    loadUniqueScore,
-    savePropRanges,
-    saveUniqueScore
-  } from "./db";
+  import { loadUniqueScore, saveUniqueScore } from "./db";
+  import { loadPropRanges, savePropRanges } from "./DB.re";
   import { compareItemStatsNullable } from "./Item.re";
 
   let text;

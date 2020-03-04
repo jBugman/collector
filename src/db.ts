@@ -1,39 +1,12 @@
 import { saveAs } from 'file-saver';
 
-import { PropRanges } from './types';
 import { trimPrefix } from './Utils.re';
-
-const PREFIX = 'collector';
-const LIST_KEY = `${PREFIX}:list`;
-const PROPS_KEY = `${PREFIX}:props:`;
-const SCORE_KEY = `${PREFIX}:score:`;
-const propsKey = (name: string) => PROPS_KEY + name;
-const scoreKey = (name: string) => SCORE_KEY + name;
-
-const loadList = (): string[] => {
-  const json = window.localStorage.getItem(LIST_KEY) || '[]';
-  return JSON.parse(json);
-};
-
-const saveList = (items: string[]) => {
-  const json = JSON.stringify(items);
-  window.localStorage.setItem(LIST_KEY, json);
-};
+import { loadList, props_key as PROPS_KEY, saveList, score_key as SCORE_KEY, scoreKey } from './DB.re';
 
 const indexItem = (name: string) => {
   const items = new Set(loadList());
   const i2 = items.add(name);
   saveList([...i2.values()]);
-};
-
-export const savePropRanges = (name: string, data: PropRanges) => {
-  const blob = JSON.stringify(data);
-  window.localStorage.setItem(propsKey(name), blob);
-};
-
-export const loadPropRanges = (name: string): PropRanges | null => {
-  const blob = window.localStorage.getItem(propsKey(name));
-  return blob ? JSON.parse(blob) : null;
 };
 
 export const saveUniqueScore = (name: string, score: number) => {
