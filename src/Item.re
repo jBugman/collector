@@ -186,18 +186,37 @@ let compareItemStats =
       hasOutOfBoundsScore
         ? Legacy
         : {
-          let goodScores =
-            Belt.Array.keepMap(scores, x =>
+          let constantsOnly =
+            Belt.Array.every(scores, x =>
               switch (x) {
-              | Score(x) => Some(x)
-              | Constant => None
-              | OutOfBounds => None
+              | Constant => true
+              | _ => false
               }
             );
-          let scores = Dict.fromArray(goodScores);
-          let totalScore = Dict.values(scores) |> Utils.average;
-          let totalScore = Js.Option.getExn(totalScore); // raises Error
-          Scores({mods: scores, score: fixed(totalScore)});
+          constantsOnly
+            ? Scores({mods: Dict.fromList([]), score: 1.0})
+            : {
+              let totalScore =
+                Belt.Array.keepMap(scores, x => {
+                  switch (x) {
+                  | Score((_, v)) => Some(v)
+                  | _ => None
+                  }
+                })
+                |> Utils.average
+                |> Js.Option.getExn; // raises Error
+
+              let usefulScores =
+                Belt.Array.keepMap(scores, x =>
+                  switch (x) {
+                  | Score((k, v)) => Some((k, fixed(v)))
+                  | _ => None
+                  }
+                )
+                |> Dict.fromArray;
+
+              Scores({mods: usefulScores, score: fixed(totalScore)});
+            };
         };
     };
 };

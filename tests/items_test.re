@@ -254,7 +254,7 @@ describe("Compare mods", () => {
     expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
   });
 
-  test("Constant mod", () => {
+  test("Mixed mods", () => {
     let mods = [|
       "+15 to maximum Life",
       "+1 to Level of Socketed Spell Gems",
@@ -268,6 +268,36 @@ describe("Compare mods", () => {
         mods: Dict.fromList([("X to maximum Life", 0.0)]),
         score: 0.0,
       });
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Mixed mods scaling", () => {
+    let mods = [|
+      "+16 to maximum Life",
+      "+1 to Level of Socketed Spell Gems",
+    |];
+    let ranges = [|
+      {js|+(15–20) to maximum Life|js},
+      {js|+1 to Level of Socketed Spell Gems|js},
+    |];
+    let correct =
+      Item.Scores({
+        mods: Dict.fromList([("X to maximum Life", 0.2)]),
+        score: 0.2,
+      });
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Constant mods", () => {
+    let mods = [|
+      "1% increased Area of Effect per 20 Intelligence",
+      "1% increased Attack Speed per 10 Dexterity",
+    |];
+    let ranges = [|
+      "1% increased Area of Effect per 20 Intelligence",
+      "1% increased Attack Speed per 10 Dexterity",
+    |];
+    let correct = Item.Scores({mods: Dict.fromList([]), score: 1.0});
     expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
   });
 });
