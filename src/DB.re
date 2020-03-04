@@ -7,9 +7,6 @@ external getItem: key => Js.Nullable.t(string) = "getItem";
 external setItem: (key, string) => unit = "setItem";
 
 [@bs.val] [@bs.scope "JSON"]
-external parseArrayExn: string => array(string) = "parse";
-
-[@bs.val] [@bs.scope "JSON"]
 external parsePropRangesExn: string => Source.propRanges = "parse";
 
 let prefix: key = "collector";
@@ -18,19 +15,6 @@ let props_key: key = prefix ++ ":props:";
 let score_key: key = prefix ++ ":score:";
 let propsKey = (name: string): key => props_key ++ name;
 let scoreKey = (name: string): key => score_key ++ name;
-
-let loadList = (): array(string) => {
-  getItem(list_key)
-  |> Js.Nullable.toOption
-  |> Js.Option.getWithDefault("[]")
-  |> parseArrayExn;
-};
-
-let saveList = (items: array(string)) => {
-  module Json = Js.Json;
-
-  items |> Json.stringArray |> Json.stringify |> setItem(list_key);
-};
 
 let savePropRanges = (name: string, data: Source.propRanges) => {
   module Json = Js.Json;
@@ -41,4 +25,15 @@ let savePropRanges = (name: string, data: Source.propRanges) => {
 let loadPropRanges = (name: string): Js.Nullable.t(Source.propRanges) => {
   let blob = getItem(propsKey(name));
   Js.Nullable.bind(blob, (. s) => parsePropRangesExn(s));
+};
+
+let saveUniqueScore = (name: string, score: float) => {
+  score
+  |> Js.Float.toFixedWithPrecision(~digits=4)
+  |> setItem(scoreKey(name));
+};
+
+let loadUniqueScore = (name: string): Js.Nullable.t(float) => {
+  let x = getItem(scoreKey(name));
+  Js.Nullable.bind(x, (. s) => float_of_string(s));
 };

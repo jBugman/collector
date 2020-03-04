@@ -1,23 +1,7 @@
 import { saveAs } from 'file-saver';
 
 import { trimPrefix } from './Utils.re';
-import { loadList, props_key as PROPS_KEY, saveList, score_key as SCORE_KEY, scoreKey } from './DB.re';
-
-const indexItem = (name: string) => {
-  const items = new Set(loadList());
-  const i2 = items.add(name);
-  saveList([...i2.values()]);
-};
-
-export const saveUniqueScore = (name: string, score: number) => {
-  window.localStorage.setItem(scoreKey(name), score.toString(10));
-  indexItem(name);
-};
-
-export const loadUniqueScore = (name: string): number | null => {
-  const val = window.localStorage.getItem(scoreKey(name));
-  return val ? parseFloat(val) : null;
-};
+import { props_key as PROPS_KEY, score_key as SCORE_KEY } from './DB.re';
 
 interface DBDump {
   scores: Record<string, number>;

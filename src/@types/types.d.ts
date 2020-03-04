@@ -29,11 +29,9 @@ declare module '*/DB.re' {
 
   const props_key: string; // eslint-disable-line camelcase,@typescript-eslint/camelcase
   const score_key: string; // eslint-disable-line camelcase,@typescript-eslint/camelcase
-  function scoreKey(name: string): string;
-
-  function loadList(): string[];
-  function saveList(items: string[]): void;
 
   function savePropRanges(name: string, data: PropRanges): void;
   function loadPropRanges(name: string): PropRanges | null;
+  function saveUniqueScore(name: string, score: number): void;
+  function loadUniqueScore(name: string): number | null;
 }
