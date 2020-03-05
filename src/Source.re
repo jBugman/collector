@@ -35,7 +35,7 @@ type propRanges = {
   explicitMods: array(string),
 };
 
-let badMods = Belt.Set.String.fromArray([|"Avoids Frozen"|]);
+let badMods = Belt.Set.String.fromArray([|"Avoids Frozen", "Corrupted"|]);
 
 let filterBadMods = (pps: propRanges): propRanges => {
   let {implicitMods, explicitMods} = pps;
