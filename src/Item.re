@@ -23,8 +23,12 @@ let fixed = x => {
 type block = string;
 
 let blocks = (text: string): array(block) => {
+  let unusablePrefix = [%re
+    "/You cannot use this item\\. Its stats will be ignored\\n--------\\n/"
+  ];
   let separator = "--------";
   text
+  |> Js.String.replaceByRe(unusablePrefix, "")
   |> Js.String.replaceByRe([%re "/\\r/"], "")
   |> Js.String.split(separator);
 };
