@@ -163,6 +163,15 @@ describe("Generalize mod range", () => {
     );
     expect(generalizeModRange(text)) |> toEqual(correct);
   });
+
+  test("Hybrid mod", () => {
+    let text = {js|Adds 1 to (40–50) Lightning Damage|js};
+    let correct: modRange = (
+      "Adds X to Y Lightning Damage",
+      Dict.fromList([("X", None), ("Y", Some((40.0, 50.0)))]),
+    );
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
 });
 
 describe("Scale mod", () => {

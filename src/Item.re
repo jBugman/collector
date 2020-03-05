@@ -48,11 +48,11 @@ type range = Js.Dict.t(option((float, float)));
 type modRange = (modName, range);
 
 let placeholders = [|"X", "Y", "Z"|];
-let valueRegex = [%re "/([+-]?[0-9.]+)/giu"];
 
 let generalizeMod = (line: rawExplicitMod): itemMod => {
   module Dict = Js.Dict;
 
+  let valueRegex = [%re "/([+-]?[0-9.]+)/giu"];
   let values = Dict.empty();
   let idx = ref(0);
   let name =
@@ -72,12 +72,20 @@ let generalizeMod = (line: rawExplicitMod): itemMod => {
   (name, values);
 };
 
+[@bs.send.pipe: string]
+external replaceCustom:
+  (Js.Re.t, (string, string, option(string), string, string) => string) =>
+  string =
+  "replace";
+
 type rawRange = string;
 
 let generalizeModRange = (line: rawRange): modRange => {
   module Dict = Js.Dict;
 
-  let rangeRegex = [%re "/[+-]?\\(([0-9.]+)[-–]([0-9.]+)\\)/giu"];
+  let rangeRegex = [%re
+    "/[+-]?(([+-]?[0-9.]+)|\\(([0-9.]+)[-–]([0-9.]+)\\))/giu"
+  ];
   let values = Dict.empty();
   let idx = ref(0);
 
@@ -91,14 +99,15 @@ let generalizeModRange = (line: rawRange): modRange => {
 
   let name =
     line
-    |> Js.String.unsafeReplaceBy2(
-         rangeRegex,
-         (_, a, b, _, _) => {
-           let x = (float_of_string(a), float_of_string(b));
+    |> replaceCustom(rangeRegex, (_, _, const, range1, range2) => {
+         switch (const) {
+         | None =>
+           let x = (float_of_string(range1), float_of_string(range2));
            updateState(Some(x));
-         },
-       )
-    |> Js.String.unsafeReplaceBy0(valueRegex, (_, _, _) => updateState(None));
+
+         | Some(_) => updateState(None)
+         }
+       });
 
   (name, values);
 };
