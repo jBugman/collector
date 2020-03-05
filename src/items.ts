@@ -30,6 +30,9 @@ const parseCopypasta = (text: string): RawItem => {
     if (idx === 0) {
       // Name
       item.rarity = rarity(header);
+      if (item.rarity !== 'Unique') {
+        throw new Error(`must be unique item: ${item.rarity}`);
+      }
       item.name = lines[1];
       item.typeLine = lines[2] || '';
       const typeWords = item.typeLine.split(' ');
