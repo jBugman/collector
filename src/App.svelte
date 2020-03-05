@@ -43,14 +43,14 @@
 
   const onLoadPoedbClick = async () => {
     const { name } = stats;
-    propRanges = filterBadMods(await getPoedbInfo(name));
-    savePropRanges(name, propRanges);
+    rawPropRanges = filterBadMods(await getPoedbInfo(name));
+    savePropRanges(name, rawPropRanges);
   };
 
   const onLoadWikiClick = async () => {
     const { name } = stats;
-    propRanges = filterBadMods(await getWikiInfo(name));
-    savePropRanges(name, propRanges);
+    rawPropRanges = filterBadMods(await getWikiInfo(name));
+    savePropRanges(name, rawPropRanges);
   };
 
   const onSaveClick = () => {
