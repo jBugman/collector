@@ -78,8 +78,7 @@ let generalizeMod = (line: rawExplicitMod): itemMod => {
 
 [@bs.send.pipe: string]
 external replaceCustom:
-  (Js.Re.t, (string, string, option(string), string, string) => string) =>
-  string =
+  (Js.Re.t, (string, string, option(string), string) => string) => string =
   "replace";
 
 type rawRange = string;
@@ -88,7 +87,7 @@ let generalizeModRange = (line: rawRange): modRange => {
   module Dict = Js.Dict;
 
   let rangeRegex = [%re
-    "/[+-]?(([+-]?[0-9.]+)|\\(([0-9.]+)[-–]([0-9.]+)\\))/giu"
+    "/([+-]?\\((-?[0-9.]+)[-–](-?[0-9.]+)\\)|([+-]?[0-9.]+))/giu"
   ];
   let values = Dict.empty();
   let idx = ref(0);
@@ -103,13 +102,13 @@ let generalizeModRange = (line: rawRange): modRange => {
 
   let name =
     line
-    |> replaceCustom(rangeRegex, (_, _, const, range1, range2) => {
-         switch (const) {
-         | None =>
+    |> replaceCustom(rangeRegex, (_, _, range1, range2) => {
+         switch (range1) {
+         | Some(range1) =>
            let x = (float_of_string(range1), float_of_string(range2));
            updateState(Some(x));
 
-         | Some(_) => updateState(None)
+         | None => updateState(None)
          }
        });
 

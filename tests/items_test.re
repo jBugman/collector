@@ -172,6 +172,24 @@ describe("Generalize mod range", () => {
     );
     expect(generalizeModRange(text)) |> toEqual(correct);
   });
+
+  test("Negative mod", () => {
+    let text = {js|(-18–-14) Physical Damage taken from Attack Hits|js};
+    let correct: modRange = (
+      "X Physical Damage taken from Attack Hits",
+      Dict.fromList([("X", Some(((-18.0), (-14.0))))]),
+    );
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
+
+  test("Crossing zero mod", () => {
+    let text = {js|+(-25-50)% to Cold Resistance|js};
+    let correct: modRange = (
+      "X% to Cold Resistance",
+      Dict.fromList([("X", Some(((-25.0), 50.0)))]),
+    );
+    expect(generalizeModRange(text)) |> toEqual(correct);
+  });
 });
 
 describe("Scale mod", () => {
@@ -218,6 +236,13 @@ describe("Scale mod", () => {
     let mods = Dict.fromList([("X", 50.0)]);
     let ranges = Dict.fromList([("X", None)]);
     let correct = Constant;
+    expect(scaleMod(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Negative mod", () => {
+    let mods = Dict.fromList([("X", (-2.0))]);
+    let ranges = Dict.fromList([("X", Some(((-5.0), (-1.0))))]);
+    let correct = Score(0.75);
     expect(scaleMod(mods, ranges)) |> toEqual(correct);
   });
 });
@@ -307,6 +332,20 @@ describe("Compare mods", () => {
       "1% increased Attack Speed per 10 Dexterity",
     |];
     let correct = Item.Scores({mods: Dict.fromList([]), score: 1.0});
+    expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
+  });
+
+  test("Negative mod", () => {
+    let mods = [|"-16 Physical Damage taken from Attack Hits"|];
+    let ranges = [|
+      {js|(-18–-14) Physical Damage taken from Attack Hits|js},
+    |];
+    let correct =
+      Item.Scores({
+        mods:
+          Dict.fromList([("X Physical Damage taken from Attack Hits", 0.5)]),
+        score: 0.5,
+      });
     expect(Item.compareItemStats(mods, ranges)) |> toEqual(correct);
   });
 });
