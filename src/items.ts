@@ -1,21 +1,14 @@
-import { ItemClass, RawItem, SpecialType } from './types';
+import { RawItem, SpecialType } from './types';
 import { trimPrefix } from './Utils.re';
-import { blocks, getLines, rarity, parseImplicits } from './Item.re';
+import { blocks, getLines, rarity, parseImplicits, ItemClass } from './Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
-
-const TYPE_JEWEL = 'Jewel';
-const TYPE_AMULET = 'Amulet';
 
 const REQUIREMENTS_LINE = 'Requirements:';
 const SOCKETS_PREFIX = 'Sockets:';
 const ILVL_PREFIX = 'Item Level:';
 
 const ATTACK_SPEED_PREFIX = 'Attacks per Second:';
-
-const ARMOR_PREFIX = 'Armour:';
-const EVASION_PREFIX = 'Evasion Rating:';
-const ES_PREFIX = 'Energy Shield:';
 
 const parseCopypasta = (text: string): RawItem => {
   const bs = blocks(text);
@@ -35,24 +28,17 @@ const parseCopypasta = (text: string): RawItem => {
       }
       item.name = lines[1];
       item.typeLine = lines[2] || '';
-      const typeWords = item.typeLine.split(' ');
-      if (typeWords.some(w => w === TYPE_JEWEL)) {
-        item.itemClass = ItemClass.Jewel;
-      }
-      if (typeWords.some(w => w === TYPE_AMULET)) {
-        item.itemClass = ItemClass.Jewelry;
-      }
+      item.itemClass = ItemClass.fromTypeLine(item.typeLine);
       return;
     }
     if (idx === 1) {
       // Base props
-      if (header.startsWith(ARMOR_PREFIX) || header.startsWith(EVASION_PREFIX) || header.startsWith(ES_PREFIX)) {
-        // Defensive stats
-        item.itemClass = ItemClass.Armour;
+      if (ItemClass.isArmour(header)) {
+        item.itemClass = ItemClass.armour;
         return;
       }
       if (lines.some(line => line.startsWith(ATTACK_SPEED_PREFIX))) {
-        item.itemClass = ItemClass.Weapon;
+        item.itemClass = ItemClass.weapon;
         return;
       }
       return;
@@ -97,7 +83,7 @@ const parseCopypasta = (text: string): RawItem => {
   }
 
   // Skip instruction fluff
-  if (item.itemClass === ItemClass.Jewel || item.itemClass === ItemClass.Map) {
+  if (item.itemClass === ItemClass.jewel || item.itemClass === ItemClass.map) {
     // FIXME: other types with instructions?
     varBlocks.pop();
   }

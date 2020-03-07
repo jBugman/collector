@@ -16,6 +16,22 @@ declare module '*/Item.re' {
   function rarity(line: string): string;
   function parseImplicits(lines: string[]): string[];
 
+  type ItemClassT = number;
+
+  interface ItemClass {
+    weapon: ItemClassT;
+    armour: ItemClassT;
+    jewelry: ItemClassT;
+    jewel: ItemClassT;
+    map: ItemClassT;
+    flask: ItemClassT;
+
+    fromTypeLine: (line: string) => ItemClassT;
+    isArmour: (line: string) => boolean;
+  }
+
+  const ItemClass: ItemClass;
+
   interface ItemScores {
     mods: Record<string, number>;
     score: number;

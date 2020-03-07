@@ -1,15 +1,8 @@
+import { ItemClassT } from '*/Item.re';
+
 export interface PropRanges {
   implicitMods?: string[];
   explicitMods: string[];
-}
-
-export enum ItemClass {
-  Weapon = 'Weapon',
-  Armour = 'Armour',
-  Jewelry = 'Jewelry',
-  Jewel = 'Jewel',
-  Map = 'Map',
-  Flask = 'Flask'
 }
 
 export enum SpecialType {
@@ -24,7 +17,7 @@ export interface RawItem {
   ilvl: number;
   name: string;
   typeLine: string;
-  itemClass: ItemClass;
+  itemClass: ItemClassT;
   specialType?: SpecialType;
   implicitMods: string[];
   explicitMods: string[];

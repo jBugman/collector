@@ -7,6 +7,28 @@ type item = Item.rawItem;
 external parse: string => Js.Nullable.t(item) = "parseCopypastaNullable";
 
 describe("Parse", () => {
+  open Item;
+
+  test("Jewel", () => {
+    let text = {js|Cobalt Jewel|js};
+    let correct = ItemClass.Jewel;
+    expect(ItemClass.fromTypeLine(text)) |> toEqual(correct);
+  });
+
+  test("Amulet", () => {
+    let text = {js|Jade Amulet|js};
+    let correct = ItemClass.Jewelry;
+    expect(ItemClass.fromTypeLine(text)) |> toEqual(correct);
+  });
+
+  test("unsupported", () => {
+    let text = {js|Stygian Vise|js};
+    let correct = ItemClass.NULL;
+    expect(ItemClass.fromTypeLine(text)) |> toEqual(correct);
+  });
+});
+
+describe("Parse item", () => {
   test("Frozen Trail", () => {
     let text =
       {js|
@@ -34,7 +56,7 @@ Place into an allocated Jewel Socket on the Passive Skill Tree. Right click to r
     let correct: item = {
       name: "Frozen Trail",
       rarity: "Unique",
-      itemClass: "Jewel",
+      itemClass: Item.ItemClass.Jewel,
       typeLine: "Cobalt Jewel",
       ilvl: 82,
       implicitMods: [||],
@@ -83,7 +105,7 @@ Life endures in Wraeclast.
     let correct: item = {
       name: "Lifesprig",
       rarity: "Unique",
-      itemClass: "Weapon",
+      itemClass: Item.ItemClass.Weapon,
       typeLine: "Driftwood Wand",
       ilvl: 80,
       implicitMods: [|"10% increased Spell Damage"|],

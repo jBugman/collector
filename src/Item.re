@@ -1,4 +1,41 @@
-type itemClass = string;
+module ItemClass = {
+  type t =
+    | NULL
+    | Weapon
+    | Armour
+    | Jewelry
+    | Jewel
+    | Map
+    | Flask;
+
+  // TS constants
+  let weapon = Weapon;
+  let armour = Armour;
+  let jewelry = Jewelry;
+  let jewel = Jewel;
+  let map = Map;
+  let flask = Flask;
+
+  let fromTypeLine = (line: string): t => {
+    let contains = (tp, xs) => Belt.Array.some(xs, x => x === tp);
+
+    let words = Js.String.split(" ", line);
+
+    switch (true) {
+    | _ when contains("Jewel", words) => Jewel
+    | _ when contains("Amulet", words) => Jewelry
+    | _ => NULL
+    };
+  };
+
+  let isArmour = (line: string): bool => {
+    let hasPrefix = s => Js.String.startsWith(s, line);
+
+    hasPrefix("Armour:")
+    || hasPrefix("Evasion Rating:")
+    || hasPrefix("Energy Shield:");
+  };
+};
 
 type rawImplicitMod = string;
 type rawExplicitMod = string;
@@ -7,7 +44,7 @@ type rawItem = {
   name: string,
   rarity: string,
   ilvl: int,
-  itemClass,
+  itemClass: ItemClass.t,
   typeLine: string,
   implicitMods: array(rawImplicitMod),
   explicitMods: array(rawExplicitMod),
