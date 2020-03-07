@@ -1,6 +1,6 @@
 import { RawItem, SpecialType } from './types';
 import { trimPrefix } from './Utils.re';
-import { blocks, getLines, rarity, parseImplicits, ItemClass } from './Item.re';
+import { blocks, getLines, rarity, parseImplicits, ItemClass, shouldStripInstructions } from './Item.re';
 
 const isSpecialType = (s: string) => s === SpecialType.Corrupted || s === SpecialType.Shaper || s === SpecialType.Elder || s === SpecialType.Synthesized;
 
@@ -83,8 +83,7 @@ const parseCopypasta = (text: string): RawItem => {
   }
 
   // Skip instruction fluff
-  if (item.itemClass === ItemClass.jewel || item.itemClass === ItemClass.map) {
-    // FIXME: other types with instructions?
+  if (shouldStripInstructions(item)) {
     varBlocks.pop();
   }
 

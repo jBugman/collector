@@ -11,6 +11,8 @@ declare module '*/Utils.re' {
 }
 
 declare module '*/Item.re' {
+  type RawItem = import('../types').RawItem;
+
   function blocks(text: string): string[];
   function getLines(text: string): string[];
   function rarity(line: string): string;
@@ -21,14 +23,12 @@ declare module '*/Item.re' {
   interface ItemClass {
     weapon: ItemClassT;
     armour: ItemClassT;
-    jewelry: ItemClassT;
-    jewel: ItemClassT;
-    map: ItemClassT;
-    flask: ItemClassT;
 
     fromTypeLine: (line: string) => ItemClassT;
     isArmour: (line: string) => boolean;
   }
+
+  function shouldStripInstructions(item: RawItem): boolean;
 
   const ItemClass: ItemClass;
 

@@ -11,10 +11,6 @@ module ItemClass = {
   // TS constants
   let weapon = Weapon;
   let armour = Armour;
-  let jewelry = Jewelry;
-  let jewel = Jewel;
-  let map = Map;
-  let flask = Flask;
 
   let fromTypeLine = (line: string): t => {
     let contains = (tp, xs) => Belt.Array.some(xs, x => x === tp);
@@ -24,6 +20,7 @@ module ItemClass = {
     switch (true) {
     | _ when contains("Jewel", words) => Jewel
     | _ when contains("Amulet", words) => Jewelry
+    | _ when contains("Flask", words) => Flask
     | _ => NULL
     };
   };
@@ -48,6 +45,15 @@ type rawItem = {
   typeLine: string,
   implicitMods: array(rawImplicitMod),
   explicitMods: array(rawExplicitMod),
+};
+
+let shouldStripInstructions = (item: rawItem): bool => {
+  switch (item.itemClass) {
+  | Jewel => true
+  | Map => true
+  | Flask => true
+  | _ => false
+  };
 };
 
 let scale = (x, bottom, top) => (x -. bottom) /. (top -. bottom);
