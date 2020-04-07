@@ -14,7 +14,10 @@ let wikiURL = name => {
     name
     |> Js.String.replaceByRe([%re "/'/"], "%27")
     |> Js.String.replaceByRe([%re "/ /"], "_");
-  proxy ++ "https://pathofexile.gamepedia.com/" ++ mangledName;
+  proxy
+  ++ "http://webcache.googleusercontent.com/search?q=cache:"
+  ++ "https://pathofexile.gamepedia.com/"
+  ++ mangledName;
 };
 
 module Parser = {
