@@ -77,10 +77,10 @@
   <Input bind:text />
   <StatsWindow stats={displayedStats} />
   <Ranges ranges={propRanges}>
+    <Button on:click={onLoadWikiClick} disabled={!stats}>Load from Wiki</Button>
     <Button on:click={onLoadPoedbClick} disabled={!stats}>
       Load from PoeDB
     </Button>
-    <Button on:click={onLoadWikiClick} disabled={!stats}>Load from Wiki</Button>
   </Ranges>
   <Ranges {error} ranges={scores}>
     <Button on:click={onSaveClick} disabled={!comparison}>

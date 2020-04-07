@@ -85,7 +85,7 @@ let parseWiki = (source): propRanges => {
     |> Document.getElementsByClassName("item-stats")
     |> HtmlCollection.item(0)
     |> Js.Option.getExn
-    |> Element.getElementsByClassName("-mod");
+    |> Element.getElementsByClassName("group -mod");
 
   if (HtmlCollection.length(statBlocks) === 1) {
     {implicitMods: [||], explicitMods: modLines(0, statBlocks)};
