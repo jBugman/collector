@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bs-fetch": "^0.5.2",
-    "bs-webapi": "^0.15.9",
+    "bs-webapi": "0.15.8",
     "file-saver": "^2.0.2"
   },
   "devDependencies": {
