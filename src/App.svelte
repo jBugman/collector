@@ -1,10 +1,10 @@
 <script>
-  import Button from "./components/Button";
-  import Input from "./components/Input";
-  import Ranges from "./components/Ranges";
-  import StatsWindow from "./components/StatsWindow";
-  import { parseCopypastaNullable } from "./items";
-  import { getPoedbInfo } from "./poedb";
+  import Button from "./components/Button.svelte";
+  import Input from "./components/Input.svelte";
+  import Ranges from "./components/Ranges.svelte";
+  import StatsWindow from "./components/StatsWindow.svelte";
+  import { parseCopypastaNullable } from "./items.ts";
+  import { getPoedbInfo } from "./poedb.ts";
   import { getWikiInfo, filterBadMods } from "./Source.re";
   import {
     loadPropRanges,

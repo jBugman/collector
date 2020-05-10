@@ -3,7 +3,7 @@ open Expect;
 
 type item = Item.rawItem;
 
-[@bs.module "../src/items"]
+[@bs.module "../src/items.ts"]
 external parse: string => Js.Nullable.t(item) = "parseCopypastaNullable";
 
 describe("Parse", () => {

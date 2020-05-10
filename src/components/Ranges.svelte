@@ -1,6 +1,6 @@
 <script>
-  import Button from "./Button";
-  import StatsWindow from "./StatsWindow";
+  import Button from "./Button.svelte";
+  import StatsWindow from "./StatsWindow.svelte";
 
   export let error = null;
   export let ranges;
