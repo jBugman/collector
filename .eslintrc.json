@@ -8,8 +8,7 @@
     "standard"
   ],
   "plugins": [
-    "@typescript-eslint",
-    "react"
+    "@typescript-eslint"
   ],
   "rules": {
     "semi": [
