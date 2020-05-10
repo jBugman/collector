@@ -11,6 +11,10 @@ const DEV = process.env.NODE_ENV === 'dev';
 const TEST = process.env.NODE_ENV === 'test';
 const OUTPUT = 'dist';
 
+const clean = clear({
+  targets: [OUTPUT, 'lib'],
+});
+
 export default [
   ...!TEST ? [
     {
@@ -21,9 +25,7 @@ export default [
         sourcemap: true,
       },
       plugins: [
-        clear({
-          targets: [OUTPUT],
-        }),
+        clean,
         resolve(),
         bucklescript(),
         svelte(),
@@ -54,9 +56,7 @@ export default [
         format: 'cjs',
       },
       plugins: [
-        clear({
-          targets: [OUTPUT],
-        }),
+        clean,
         resolve(),
         bucklescript(),
         typescript({
