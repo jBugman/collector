@@ -6,3 +6,4 @@ dist/
 .merlin
 lib/bs/
 *.bs.js
+test_data/

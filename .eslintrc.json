@@ -3,10 +3,10 @@
     "browser": true
   },
   "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "standard"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint"
   ],
