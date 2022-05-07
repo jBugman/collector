@@ -1,4 +1,4 @@
-import { ItemClassT } from '*/Item.re';
+import { ItemClassT } from '*/Item.res';
 
 export interface PropRanges {
   implicitMods?: string[];

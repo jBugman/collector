@@ -1,4 +1,4 @@
-declare module '*/Source.re' {
+declare module '*/Source.res' {
   type PropRanges = import('../types').PropRanges;
 
   function poedbURL(name: string): string;
@@ -6,11 +6,11 @@ declare module '*/Source.re' {
   function filterBadMods(mods: PropRanges): PropRanges;
 }
 
-declare module '*/Utils.re' {
+declare module '*/Utils.res' {
   function trimPrefix(pattern: string, val: string): string;
 }
 
-declare module '*/Item.re' {
+declare module '*/Item.res' {
   type RawItem = import('../types').RawItem;
 
   function blocks(text: string): string[];
@@ -40,7 +40,7 @@ declare module '*/Item.re' {
   function compareItemStatsNullable(mods: string[], ranges: string[]): ItemScores | null;
 }
 
-declare module '*/DB.re' {
+declare module '*/DB.res' {
   type PropRanges = import('../types').PropRanges;
 
   const props_key: string; // eslint-disable-line camelcase,@typescript-eslint/camelcase

@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 
-import { trimPrefix } from './Utils.re';
-import { props_key as PROPS_KEY, score_key as SCORE_KEY } from './DB.re';
+import { trimPrefix } from './Utils.res';
+import { props_key as PROPS_KEY, score_key as SCORE_KEY } from './DB.res';
 
 interface DBDump {
   scores: Record<string, number>;

@@ -7,3 +7,4 @@ dist/
 lib/bs/
 *.bs.js
 test_data/
+.bsb.lock

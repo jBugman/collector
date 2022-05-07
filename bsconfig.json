@@ -22,10 +22,10 @@
   "suffix": ".bs.js",
   "bs-dependencies": [
     "bs-fetch",
-    "bs-webapi"
+    "rescript-webapi"
   ],
   "bs-dev-dependencies": [
-    "@glennsl/bs-jest"
+    "@glennsl/rescript-jest"
   ],
   "warnings": {
     "error": "+101"

@@ -18,10 +18,10 @@ const clean = clear({
 export default [
   ...!TEST ? [
     {
-      input: 'src/Index.re',
+      input: 'src/Index.res',
       output: {
         file: `${OUTPUT}/app.js`,
-        format: 'iife',
+        format: 'es',
         sourcemap: true,
       },
       plugins: [
@@ -50,10 +50,10 @@ export default [
     },
   ] : [
     {
-      input: 'tests/items_test.re',
+      input: 'tests/items_test.res',
       output: {
         file: `${OUTPUT}/items.test.js`,
-        format: 'cjs',
+        format: 'es',
       },
       plugins: [
         clean,
