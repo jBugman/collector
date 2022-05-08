@@ -1,9 +1,11 @@
-<script>
-  export let stats;
-  export let error = null;
+<script lang="ts">
+  export let stats: unknown;
+  export let error: string | null = null;
 
   $: text = stats ? JSON.stringify(stats, undefined, 2) : "";
 </script>
+
+<div>{error || text}</div>
 
 <style>
   div {
@@ -16,5 +18,3 @@
     white-space: pre-wrap;
   }
 </style>
-
-<div>{error || text}</div>

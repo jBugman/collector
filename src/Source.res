@@ -26,8 +26,6 @@ module DOMParser = {
   let parseFromString = (source: string) => new() -> method(source, "text/html")
 }
 
-// let parseHTML = (source: string) => DOMParser.parseFromString(source, "text/html")
-
 type propRanges = {
   implicitMods: array<string>,
   explicitMods: array<string>,
@@ -93,11 +91,12 @@ let parseWiki = (source): propRanges => {
   }
 }
 
-let getWikiInfo = (name: string): Js.Promise.t<propRanges> => {
-  open Js.Promise
+let getWikiInfo = (name: string) => {
+  open Promise
+  open Webapi.Fetch
 
   let url = wikiURL(name)
-  Fetch.fetchWithInit(url, Fetch.RequestInit.make(~mode=CORS, ()))
-  |> then_(Fetch.Response.text)
-  |> then_(text => text |> parseWiki |> resolve)
+  fetchWithInit(url, RequestInit.make(~mode=CORS, ()))
+  -> then(Response.text)
+  -> then(parseWiki -> resolve)
 }

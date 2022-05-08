@@ -1,4 +1,5 @@
-import { RawItem, SpecialType } from './types';
+import type { RawItem } from './types';
+import { SpecialType } from './types';
 import { trimPrefix } from './Utils.res';
 import { blocks, getLines, rarity, parseImplicits, ItemClass, shouldStripInstructions } from './Item.res';
 

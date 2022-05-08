@@ -1,10 +1,16 @@
-<script>
-  import Button from "./Button.svelte";
+<script lang="ts">
   import StatsWindow from "./StatsWindow.svelte";
 
-  export let error = null;
-  export let ranges;
+  export let error: string | null = null;
+  export let ranges: unknown;
 </script>
+
+<section>
+  <StatsWindow stats={ranges} {error} />
+  <div class="footer">
+    <slot />
+  </div>
+</section>
 
 <style>
   section {
@@ -19,10 +25,3 @@
     grid-auto-flow: column;
   }
 </style>
-
-<section>
-  <StatsWindow stats={ranges} {error} />
-  <div class="footer">
-    <slot />
-  </div>
-</section>

@@ -5,12 +5,11 @@
     "module": "esnext",
     "moduleResolution": "node",
     "jsx": "preserve",
+    "isolatedModules": true,
     "sourceMap": true,
     "strict": true,
     "types": [],
     "baseUrl": "."
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src"]
 }

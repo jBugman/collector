@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
   export let text = "";
 </script>
+
+<textarea placeholder="Paste stats here" bind:value={text} />
 
 <style>
   textarea {
@@ -13,5 +15,3 @@
     white-space: pre-wrap;
   }
 </style>
-
-<textarea placeholder="Paste stats here" bind:value={text} />

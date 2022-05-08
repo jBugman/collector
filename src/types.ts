@@ -23,3 +23,12 @@ export interface RawItem {
   explicitMods: string[];
   craftedMods?: string[];
 }
+
+export interface ItemScores {
+  mods: Record<string, number>;
+  score: number;
+}
+
+export interface Scores extends ItemScores {
+  savedScore?: number;
+}

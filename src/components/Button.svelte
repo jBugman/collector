@@ -1,6 +1,10 @@
-<script>
+<script lang="ts">
   export let disabled = false;
 </script>
+
+<button on:click {disabled}>
+  <slot />
+</button>
 
 <style>
   button {
@@ -15,7 +19,3 @@
     color: #f6c66a;
   }
 </style>
-
-<button on:click {disabled}>
-  <slot />
-</button>

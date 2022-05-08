@@ -1,3 +1,5 @@
+%%raw(`import "./global.css"`)
+
 type options = {target: Dom.element}
 
 type app

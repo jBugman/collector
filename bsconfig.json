@@ -14,15 +14,12 @@
   "package-specs": [
     {
       "module": "es6"
-    },
-    {
-      "module": "commonjs"
     }
   ],
   "suffix": ".bs.js",
   "bs-dependencies": [
-    "bs-fetch",
-    "rescript-webapi"
+    "rescript-webapi",
+    "@ryyppy/rescript-promise"
   ],
   "bs-dev-dependencies": [
     "@glennsl/rescript-jest"

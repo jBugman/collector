@@ -2,7 +2,7 @@ declare module '*/Source.res' {
   type PropRanges = import('../types').PropRanges;
 
   function poedbURL(name: string): string;
-  function getWikiInfo(name: string): void;
+  function getWikiInfo(name: string): Promise<PropRanges>;
   function filterBadMods(mods: PropRanges): PropRanges;
 }
 
