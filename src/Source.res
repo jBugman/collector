@@ -98,5 +98,5 @@ let getWikiInfo = (name: string) => {
   let url = wikiURL(name)
   fetchWithInit(url, RequestInit.make(~mode=CORS, ()))
   -> then(Response.text)
-  -> then(parseWiki -> resolve)
+  -> then(text => text -> parseWiki -> resolve)
 }
