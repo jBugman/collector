@@ -28,7 +28,7 @@
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.15.0",
     "rescript": "^9.1.4",
-    "svelte": "^3.48.0",
+    "svelte": "^3.49.0",
     "svelte-preprocess": "^4.10.6",
     "typescript": "^4.6.4",
     "vite": "^2.9.8"
